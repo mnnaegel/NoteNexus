@@ -80,6 +80,7 @@ function NoteList() {
         console.error("Error:", error);
       });
   };
+
   return (
     <>
       <NavigationBar />
@@ -99,11 +100,12 @@ function NoteList() {
           />
 
           <Button
-            className={styles.NoteList__create__button}
+            sx={{ color: "#212922", backgroundColor: "#aef6c7" }}
             variant="contained"
             onClick={() => {
               onCreateNote();
             }}
+            className={styles.NoteList__create__button}
           >
             Create Note
           </Button>

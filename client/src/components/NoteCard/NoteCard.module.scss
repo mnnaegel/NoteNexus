@@ -11,8 +11,15 @@
   // aspect-ratio: 1;
   border-radius: 0.8rem;
   cursor: pointer;
-
   border: 1px solid $viridian;
+  box-shadow: #a4a4a4 0px 2px 3px 0px;
+
+  &:hover {
+    border: 1px solid $celadon;
+    .NoteCard__top {
+      border-bottom: 1px solid $celadon;
+    }
+  }
 
   &__top {
     display: flex;
