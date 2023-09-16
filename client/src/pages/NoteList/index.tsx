@@ -8,38 +8,13 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { Note } from "@/types/note.type";
-
-const TestNotes = [
-  {
-    id: "note_id_1",
-    name: "Note 1",
-    summary: "This note is for testing",
-  },
-  {
-    id: "note_id_2",
-    name: "Note 2",
-    summary: "This note is for testing",
-  },
-  {
-    id: "note_id_3",
-    name: "Note 3",
-    summary: "This note is for testing",
-  },
-  {
-    id: "note_id_4",
-    name: "Note 4",
-    summary: "This note is for testing",
-  },
-  {
-    id: "note_id_5",
-    name: "Note 5",
-    summary:
-      "This note is for testingThis note is for testingThis note is for testingThis note is for testingThis note is for testingThis note is for testingThis note is for testingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtesting",
-  },
-];
+import { useForm } from "react-hook-form";
+import AddIcon from "@mui/icons-material/Add";
+import Add from "@mui/icons-material/Add";
 
 function NoteList() {
   const { user } = useUser();
+  const { register, handleSubmit } = useForm();
   const [newNoteName, setNewNoteName] = useState<string>("");
   const [notes, setNotes] = useState<Array<Note>>([]);
   useEffect(() => {
@@ -90,31 +65,25 @@ function NoteList() {
     <>
       <NavigationBar />
       <div className={styles.NoteList}>
-        <div className={styles.NoteList__create}>
-          <TextField
-            className={styles.NoteList__create__input}
-            label="New Note Name"
-            variant="filled"
-            value={newNoteName}
-            InputProps={{ className: styles.NoteList__create__input }}
-            onChange={(
-              event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => {
-              setNewNoteName(event.target.value);
-            }}
-          />
+        <form
+          className={styles.NoteList__create}
+          onSubmit={handleSubmit(onCreateNote)}
+        >
+          <div className={styles.NoteList__create__wrapper}>
+            <input
+              className={styles.NoteList__create__input}
+              placeholder="Start a new note"
+              {...register("newNoteName", {
+                required: true,
+                maxLength: 30,
+              })}
+            />
+            <button className={styles.NoteList__create__submit} type="submit">
+              <AddIcon />
+            </button>
+          </div>
+        </form>
 
-          <Button
-            sx={{ color: "#212922", backgroundColor: "#aef6c7" }}
-            variant="contained"
-            onClick={() => {
-              onCreateNote();
-            }}
-            className={styles.NoteList__create__button}
-          >
-            Create Note
-          </Button>
-        </div>
         <Grid container spacing={2} className={styles.NoteList__cardsContainer}>
           {notes && notes.length > 0 ? (
             notes.map((note) => {
