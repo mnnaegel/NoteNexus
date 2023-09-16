@@ -29,7 +29,7 @@ def write_paragraphs(paragraphs : list[Paragraph]):
                 '_op_type': 'index',
                 '_index': PARAGRAPH_INDEX,
                 '_id': p.id,
-                'doc': p.as_doc()
+                '_source': p.as_doc()
             }
 
     for success, info in helpers.parallel_bulk(client=es, actions=create_iterator(paragraphs), thread_count=1):
@@ -47,7 +47,7 @@ def update_paragraphs(paragraphs : list[Paragraph]):
 def get_paragraphs_by_noteid(note_id : str):
     q = {
         "term" : {
-            "doc.note_id": {
+            "note_id": {
                 "value" : note_id
             }
         }
@@ -58,8 +58,36 @@ def get_paragraphs_by_noteid(note_id : str):
     
     rs = []
     for hit in res['hits']['hits']:
-        doc = hit['_source']['doc']
+        doc = hit['_source']
         del doc['embedding']
         rs.append(doc)
+    
+    return rs
+
+def vector_similarity_search(query_vector : list[float], threshold : float):
+    q = {
+        "script_score": {
+            "query" : {
+                "match_all":{}
+            },
+            "script": {
+                "source": "cosineSimilarity(params.query_vector, 'embedding')", 
+                "params": {
+                    "query_vector": query_vector
+                }
+            }
+        }
+    }
+    
+    res = es.search(index=PARAGRAPH_INDEX, query=q)
+    
+    rs = []
+    for hit in res['hits']['hits']:
+        score = float(hit['_score'])
+        if score >= threshold:
+            doc = hit['_source']
+            del doc['embedding']
+            doc['similarity'] = score
+            rs.append(doc)
     
     return rs
