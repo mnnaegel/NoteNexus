@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"context"
@@ -103,8 +104,22 @@ func insertUser(c *gin.Context, db *mongo.Database) {
 		return
 	}
 
+
 	users := db.Collection("users")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	// enforce new user id to be unique
+	var result user
+	err = users.FindOne(ctx, bson.M{"id": newUser.Id}).Decode(&result)
+	if err == nil {
+		fmt.Println(err);
+		// exit
+		c.JSON(http.StatusConflict, gin.H{
+			"status": http.StatusConflict,
+			"message": "User already exists",
+		})
+		return
+	}
 
 	insertResult, err := users.InsertOne(ctx, newUser)
 	if err != nil {
@@ -172,7 +187,10 @@ func main() {
     fmt.Println("Connected to MongoDB!")
 
 		router := gin.Default()
-
+		config := cors.DefaultConfig()
+    config.AllowAllOrigins = true
+    router.Use(cors.New(config))
+		
 		router.GET("/users/:id", func(c *gin.Context) {
 			getUserByID(c, db)
 		})
