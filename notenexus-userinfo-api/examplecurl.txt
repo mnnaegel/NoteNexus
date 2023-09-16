@@ -27,4 +27,14 @@ curl -X POST \
 curl -X GET http://localhost:8080/notes/abc
 
 > delete note
-curl -X DELETE http://localhost:8080/notes/65d2ce4d-81df-4389-85cb-ced375dffa74
+curl -X DELETE http://localhost:8080/notes/380bf258-c1f0-46b5-8c53-f0d7bb7c9127
+
+> update note
+curl -X PATCH "http://localhost:8080/notes/note12345" \
+     -H "Content-Type: application/json" \
+     -d '{
+         "id": "note12345",
+         "title": "Updated Note Title",
+         "summary": "This is the updated content of the note.",
+         "author": "xyz"
+     }'
