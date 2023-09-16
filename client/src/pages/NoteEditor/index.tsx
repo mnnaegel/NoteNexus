@@ -59,9 +59,9 @@ function NoteEditor() {
       delete: []
     }
 
-
+    console.log(postData)
     axios
-      .post("http://127.0.0.1:5000/edit_paragraphs", JSON.stringify(postData))
+      .post("http://127.0.0.1:5000/edit_paragraphs", postData)
       .then((response) => {
         console.log(response)
       })
