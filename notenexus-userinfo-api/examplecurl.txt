@@ -26,3 +26,5 @@ curl -X POST \
 > get notes by id
 curl -X GET http://localhost:8080/notes/abc
 
+> delete note
+curl -X DELETE http://localhost:8080/notes/65d2ce4d-81df-4389-85cb-ced375dffa74

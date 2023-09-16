@@ -59,6 +59,30 @@ func getNotesByAuthor(c *gin.Context, db *mongo.Database) {
 	})
 }
 
+func deleteNoteByID(c *gin.Context, db *mongo.Database) {
+	id := c.Param("id")
+
+	notes := db.Collection("notes")
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	_, err := notes.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil {
+		fmt.Println(err);
+		// exit 
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": http.StatusInternalServerError,
+			"message": "Failed to delete note",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": http.StatusOK,
+		"message": "Note deleted successfully",
+	})
+}
+
+
 func getUserByID(c *gin.Context, db *mongo.Database) {
 	id := c.Param("id")
 
@@ -202,6 +226,9 @@ func main() {
 		})
 		router.POST("/notes", func(c *gin.Context) {
 			insertNote(c, db)
+		})
+		router.DELETE("/notes/:id", func(c *gin.Context) {
+			deleteNoteByID(c, db)
 		})
 
 		router.Run("localhost:8080")
