@@ -15,7 +15,8 @@ function NoteEditor() {
 
   const handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
-      window.alert(event.target.id)
+      event.preventDefault()
+      const id = event.target.id
       const length = editorContent.length
       const curr = editorContent.slice(length - 1)[0]
       curr.after = `para${idCounter + 1}`
