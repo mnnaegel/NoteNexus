@@ -3,7 +3,9 @@ import Grid from "@mui/material/Grid"; // Grid version 1
 import NoteCard from "../../components/NoteCard/NoteCard";
 import NavigationBar from "@/components/Navigation/Navigation";
 import { Button, Input, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { uuid } from "uuidv4";
 
 const TestNotes = [
   {
@@ -35,6 +37,46 @@ const TestNotes = [
 
 function NoteList() {
   const [newNoteName, setNewNoteName] = useState<string>("");
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/users/abc")
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
+
+  const onCreateNote = () => {
+    const postData = {
+      id: uuid(), // change later to
+      title: newNoteName,
+      content: "",
+      author: "test 123",
+    };
+
+    // Define the Axios request configuration
+    const axiosConfig = {
+      method: "post",
+      url: "http://localhost:8080/notes",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: postData,
+    };
+
+    // Make the Axios POST request
+    axios(axiosConfig)
+      .then((response) => {
+        // Handle the response if needed
+        console.log("Response:", response.data);
+      })
+      .catch((error) => {
+        // Handle errors if any
+        console.error("Error:", error);
+      });
+  };
   return (
     <>
       <NavigationBar />
@@ -57,6 +99,7 @@ function NoteList() {
             className={styles.NoteList__create__button}
             variant="contained"
             onClick={() => {
+              onCreateNote();
             }}
           >
             Create Note
