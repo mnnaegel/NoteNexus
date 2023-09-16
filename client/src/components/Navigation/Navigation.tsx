@@ -9,7 +9,6 @@ interface INavigationBarProps {
   isNotLoggedIn?: boolean;
 }
 function NavigationBar({ isNotLoggedIn }: INavigationBarProps) {
-function NavigationBar() {
   const pages = [
     { name: "Home", href: "/" },
     { name: "Notes", href: "/NoteList" },
