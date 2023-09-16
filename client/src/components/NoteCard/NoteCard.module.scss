@@ -8,7 +8,7 @@
 .NoteCard {
   display: flex;
   flex-direction: column;
-  aspect-ratio: 1;
+  // aspect-ratio: 1;
   border-radius: 0.8rem;
   cursor: pointer;
 
@@ -25,6 +25,9 @@
   }
 
   &__body {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-height: 6rem;
     padding: 16px 8px 14px 16px;
   }
 }

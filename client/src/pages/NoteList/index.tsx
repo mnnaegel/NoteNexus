@@ -5,7 +5,8 @@ import NavigationBar from "@/components/Navigation/Navigation";
 import { Button, Input, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
+import { useUser } from "@clerk/nextjs";
 
 const TestNotes = [
   {
@@ -31,12 +32,14 @@ const TestNotes = [
   {
     id: "note_id_5",
     name: "Note 5",
-    summary: "This note is for testing",
+    summary:
+      "This note is for testingThis note is for testingThis note is for testingThis note is for testingThis note is for testingThis note is for testingThis note is for testingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtestingtesting",
   },
 ];
 
 function NoteList() {
   const [newNoteName, setNewNoteName] = useState<string>("");
+  const { user } = useUser();
   useEffect(() => {
     axios
       .get("http://localhost:8080/users/abc")
@@ -50,10 +53,10 @@ function NoteList() {
 
   const onCreateNote = () => {
     const postData = {
-      id: uuid(), // change later to
+      id: uuidv4(),
       title: newNoteName,
       content: "",
-      author: "test 123",
+      author: user?.id,
     };
 
     // Define the Axios request configuration
