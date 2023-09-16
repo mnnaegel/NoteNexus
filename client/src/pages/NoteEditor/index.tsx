@@ -1,25 +1,74 @@
 import NavigationBar from "@/components/Navigation/Navigation";
 import classnames from "classnames";
-import { Container, Grid, TextField, TextareaAutosize } from "@mui/material";
+import { Container, Grid, TextareaAutosize } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import axios from "axios";
 
 import styles from "./NoteEditor.module.scss";
 import { eventNames } from "process";
 
+interface Paragraph {
+    key: string;
+    contents: string;
+    id: string;
+    previous: string;
+    next: string;
+    updated: boolean;
+    note_id?: string;
+}
+
+interface UpdateParagraphRequest {
+  update: {[key: string]: Partial<Paragraph>};
+  delete: string[];
+}
+
 function NoteEditor() {
   // NOTE: uuid() will be different for initial key and paragraph id
   const initial_id = uuid();
-  const [updated, setUpdated] = useState({})
-  const [editorContent, setEditorContent] = useState([
+  // Starting Editor
+  const [editorContent, setEditorContent] = useState<Paragraph[]>([
     {
       key: initial_id,
-      text: "",
-      paragraphId: initial_id,
-      before: "",
-      after: "",
+      contents: "",
+      id: initial_id,
+      previous: "",
+      next: "",
+      updated: true
     },
   ]);
+
+
+  function updateNote() {
+    const updated: {[key: string]: Partial<Paragraph>} = {}
+    for (let i = 0; i < editorContent.length; i++) {
+      if (editorContent[i].updated) {
+        const para = editorContent[i];  
+        updated[para.id] = {
+          id: para.id,
+          contents: para.contents,
+          previous: para.previous,
+          next: para.next,
+          note_id: "test_town"
+        } 
+      }
+    }
+
+    const postData: UpdateParagraphRequest = {
+      update: updated,
+      delete: []
+    }
+
+
+    axios
+      .post("http://127.0.0.1:5000/edit_paragraphs", JSON.stringify(postData))
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   const handleKeyPress = (event: any) => {
     // Enter is pressed for a given item id
@@ -30,38 +79,37 @@ function NoteEditor() {
       const length = editorContent.length;
       let new_arr = [];
       for (let i = 0; i < length; i++) {
-        if (editorContent[i].paragraphId !== id) {
+        if (editorContent[i].id !== id) {
           new_arr.push(editorContent.slice(i)[0]);
-        } else if (editorContent[i].paragraphId === id) {
+        } else if (editorContent[i].id === id) {
           let newParaId = uuid();
           let curr = editorContent.slice(i)[0];
-          let next = curr.after;
-          curr.after = newParaId;
+          let next = curr.next;
+          curr.next = newParaId;
+          curr.updated = true;
           new_arr.push(curr);
           let newPara = {
             key: newParaId,
-            text: "",
-            paragraphId: newParaId,
-            before: curr.paragraphId,
-            after: next,
+            contents: "",
+            id: newParaId,
+            previous: curr.id,
+            next: next,
+            updated: true
           };
           new_arr.push(newPara);
           if (next !== "") {
             let next_el = editorContent.slice(i + 1)[0];
-            next_el.before = newParaId;
+            next_el.previous = newParaId;
+            next_el.updated = true;
             ++i;
             new_arr.push(next_el);
           }
         }
       }
-
       setEditorContent(new_arr);
       console.log("enter press here! ");
     }
     // There has been a change to a specific field
-    else  {
-      setUpdated([])
-    }
   };
 
   return (
@@ -69,7 +117,7 @@ function NoteEditor() {
       <NavigationBar />
       <Container>
         <h1>Note Editor</h1>
-        <button>Save</button>
+        <button onClick={updateNote}>Save</button>
         <form>
           <Grid></Grid>
 
@@ -79,20 +127,21 @@ function NoteEditor() {
                 autoFocus
                 className={styles.paragraph}
                 // ref={(element: any) => element && (index == focusIdx) && element.focus()}
-                id={el.paragraphId}
+                id={el.id}
                 key={el.key}
-                value={el.text}
+                value={el.contents}
                 onChange={(e) => {
                   let editorCont = editorContent.map((editor, index) => {
-                    if (editor.paragraphId !== el.paragraphId) {
+                    if (editor.id !== el.id) {
                       return editor;
                     } else {
                       return {
                         key: el.key,
-                        text: e.target.value,
-                        paragraphId: el.paragraphId,
-                        before: el.before,
-                        after: el.after,
+                        contents: e.target.value,
+                        id: el.id,
+                        previous: el.previous,
+                        next: el.next,
+                        updated: true
                       };
                     }
                   });
