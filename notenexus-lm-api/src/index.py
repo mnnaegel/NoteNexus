@@ -1,5 +1,6 @@
 import json
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from lm import encode_text
 from db.model import Paragraph
 from db import (
@@ -10,6 +11,7 @@ from db import (
 )
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def hello_world():
