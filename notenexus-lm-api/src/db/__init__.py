@@ -1,11 +1,12 @@
+import os
 from db.model import Paragraph
 from elasticsearch import Elasticsearch, helpers
 
 PARAGRAPH_INDEX = 'paragraph'
 
 es = Elasticsearch(
-    "https://34.135.245.185:9200",
-    basic_auth=('elastic','WdKf6dzpHNwdNrYlb4m-'),
+    os.environ['ELASTIC_CLUSTER'],
+    basic_auth=(os.environ['ELASTIC_USER'],os.environ['ELASTIC_PASS']),
     verify_certs=False
 )
 
