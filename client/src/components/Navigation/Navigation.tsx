@@ -1,5 +1,7 @@
 import Link from "next/link";
 import * as React from "react";
+import styles from "./Navigation.module.scss";
+
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -10,9 +12,11 @@ function NavigationBar() {
     { name: "LinkView", href: "/LinkView" },
   ];
   return (
-    <div>
+    <div className={styles.NavigationBar}>
       {pages.map((el) => (
-        <Link href={el.href}>{el.name}</Link>
+        <Link href={el.href} key={el.name}>
+          {el.name}
+        </Link>
       ))}
     </div>
   );
