@@ -1,0 +1,11 @@
+@import "../../styles/variables.scss";
+.NoteEditor {
+    textarea {
+        padding: 1rem;
+        box-sizing: border-box;
+        resize: none;
+        outline-width: 1px;
+        outline-color: rgb(209, 209, 209) !important;
+        width: 100%;
+    }
+}
