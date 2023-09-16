@@ -25,7 +25,7 @@ type note struct {
 	Id string `bson:"id" json:"id"`
 	Title string `bson:"title" json:"title"`
 	Content string `bson:"content" json:"content"`
-	Author int `bson:"author" json:"author"`
+	Author string `bson:"author" json:"author"`
 }
 
 func getNotesByAuthor(c *gin.Context, db *mongo.Database) {
@@ -102,7 +102,7 @@ func insertUser(c *gin.Context, db *mongo.Database) {
 		})
 		return
 	}
-	
+
 	users := db.Collection("users")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
