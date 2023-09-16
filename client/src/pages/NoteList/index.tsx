@@ -2,7 +2,6 @@ import styles from "./NoteList.module.scss";
 import Grid from "@mui/material/Grid"; // Grid version 1
 import NoteCard from "../../components/NoteCard/NoteCard";
 import NavigationBar from "@/components/Navigation/Navigation";
-import { Button, Input, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
@@ -10,34 +9,31 @@ import { useUser } from "@clerk/nextjs";
 import { Note } from "@/types/note.type";
 import { useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
-import Add from "@mui/icons-material/Add";
 
 function NoteList() {
   const { user } = useUser();
-  const { register, handleSubmit } = useForm();
-  const [newNoteName, setNewNoteName] = useState<string>("");
-  const [notes, setNotes] = useState<Array<Note>>([]);
+  const { register, handleSubmit, reset } = useForm();
+  const [notes, setNotes] = useState<Array<Partial<Note>>>([]);
+
   useEffect(() => {
     axios
       .get("http://localhost:8080/notes/" + user?.id)
       .then((response) => {
         setNotes(response.data.data);
-        console.log("set notes");
       })
       .catch((error) => {
         console.error(error);
       });
   }, [user]);
 
-  const onCreateNote = () => {
+  const onCreateNote = (data: any) => {
     const postData = {
       id: uuidv4(),
-      title: newNoteName,
-      content: "",
+      title: data.newNoteName,
+      content: [],
       author: user?.id,
-    };
+    } as Partial<Note>;
 
-    // Define the Axios request configuration
     const axiosConfig = {
       method: "post",
       url: "http://localhost:8080/notes",
@@ -46,19 +42,16 @@ function NoteList() {
       },
       data: postData,
     };
-    console.log("creating note");
-    // Make the Axios POST request
+
     axios(axiosConfig)
       .then((response) => {
-        // Handle the response if needed
         console.log("Response:", response.data);
+        setNotes([...notes, postData as Partial<Note>]);
+        reset();
       })
       .catch((error) => {
-        // Handle errors if any
         console.error("Error:", error);
       });
-
-    setNewNoteName("");
   };
 
   return (
