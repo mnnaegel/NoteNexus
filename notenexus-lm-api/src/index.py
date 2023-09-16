@@ -1,8 +1,12 @@
 import json
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from lm import encode_text
 from db.model import Paragraph
-from db import es_write_paragraph, get_note_by_id
+from db import (
+    get_paragraphs_by_noteid,
+    delete_paragraphs_by_id,
+    update_paragraphs
+)
 
 app = Flask(__name__)
 
@@ -10,27 +14,40 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.post('/submit_paragraph')
-def submit_paragraph():
+# Used for writing new paragraphs, and update or deleting existing paragraphs
+@app.post('/edit_paragraphs')
+def edit_paragraphs():
     body = request.json
     
-    if 'contents' in body:
-        emb = encode_text(body['contents'])
-    else:
-        return app.response_class(
-            response=json.dumps({"message":"Request didn't have paragraph contents."}),
-            status=400,
-            mimetype='application/json'
-        )
     
-    para = Paragraph(
-        note_id = body['note_id'] if 'note_id' in body else '-1',
-        next = body['next'] if 'next' in body else None,
-        previous = body['previous'] if 'previous' in body else None,
-        embedding = emb,
-        contents = body['contents']
-    )
+    if 'delete' in body and body['delete']:
+        #delete logic
+        delete_paragraphs_by_id(body['delete'])
+        
+        
     
-    es_write_paragraph(para)
-    
+    if 'update' in body and body['update']:
+        #update logic
+        paragraphs_to_update = []
+        for element in body['update'].values():
+            paragraphs_to_update.append(
+                Paragraph (
+                    id = element['id'],
+                    note_id = element['note_id'] if 'note_id' in element else '-1',
+                    next = element['next'] if 'next' in element else None,
+                    previous = element['previous'] if 'previous' in element else None,
+                    embedding = encode_text(element['contents']),
+                    contents = element['contents']
+                )
+            )
+        
+        if paragraphs_to_update:
+            update_paragraphs(paragraphs_to_update)
+        
     return ''
+
+@app.get("/get_paragraphs/<note_id>")
+def get_paragraphs(note_id):
+    paragraphs = get_paragraphs_by_noteid(note_id)
+    
+    return jsonify(paragraphs)

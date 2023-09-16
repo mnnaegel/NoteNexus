@@ -25,7 +25,7 @@ type user struct {
 type note struct {
 	Id string `bson:"id" json:"id"`
 	Title string `bson:"title" json:"title"`
-	Content string `bson:"content" json:"content"`
+	Summary string `bson:"summary" json:"summary"`
 	Author string `bson:"author" json:"author"`
 }
 
@@ -58,6 +58,66 @@ func getNotesByAuthor(c *gin.Context, db *mongo.Database) {
 		"data": results,
 	})
 }
+
+func deleteNoteByID(c *gin.Context, db *mongo.Database) {
+	id := c.Param("id")
+
+	notes := db.Collection("notes")
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	_, err := notes.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil {
+		fmt.Println(err);
+		// exit 
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": http.StatusInternalServerError,
+			"message": "Failed to delete note",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": http.StatusOK,
+		"message": "Note deleted successfully",
+	})
+}
+
+func updateNoteByID(c *gin.Context, db *mongo.Database) {
+	id := c.Param("id")
+
+	// Decode the incoming JSON request body into the note struct
+	var updatedNote note
+	if err := c.BindJSON(&updatedNote); err != nil {
+		c.JSON(400, gin.H{"error": "Failed to bind note"})
+		return
+	}
+
+	notes := db.Collection("notes")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Define a filter to identify the document to update based on the ID
+	filter := bson.M{"id": id}
+
+	// Define an update document to set the new values
+	update := bson.D{
+		{Key: "$set", Value: bson.D{
+			{Key: "title", Value: updatedNote.Title},
+			{Key: "summary", Value: updatedNote.Summary},
+			{Key: "author", Value: updatedNote.Author},
+		}},
+	}
+
+	// Call the UpdateByID method with the necessary parameters
+	_, err := notes.UpdateOne(ctx, filter, update)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Failed to update note"})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Note updated successfully"})
+}
+
 
 func getUserByID(c *gin.Context, db *mongo.Database) {
 	id := c.Param("id")
@@ -202,6 +262,12 @@ func main() {
 		})
 		router.POST("/notes", func(c *gin.Context) {
 			insertNote(c, db)
+		})
+		router.DELETE("/notes/:id", func(c *gin.Context) {
+			deleteNoteByID(c, db)
+		})
+		router.PATCH("/notes/:id", func(c *gin.Context) {
+			updateNoteByID(c, db)
 		})
 
 		router.Run("localhost:8080")

@@ -15,13 +15,14 @@ export default async function handler(
   const headers = req.headers;
   // Create a new Webhook instance with your webhook secret
   const wh = new Webhook(webhookSecret);
- 
   let evt: WebhookEvent;
   try {
     // Verify the webhook payload and headers
     evt = wh.verify(payload, headers) as WebhookEvent;
-  } catch (_) {
+  } catch (error) {
     // If the verification fails, return a 400 error
+    console.log(error)
+    console.log('verification fails')
     return res.status(400).json({});
   }
   const { id } = evt.data;
@@ -38,17 +39,17 @@ export default async function handler(
       },
       body: JSON.stringify({
         Id: id,
-        Name: "tmp",
-        Email: evt.data.primary_email_address_id
+        Name: "",
+        Email: "",
       })
     });
 
+    console.log(response)
     if (!response.ok) {
       console.error(`Error creating user: ${response.statusText}`);
       return res.status(500).json({ error: 'Failed to create user' });
     }
 
-    console.log(response)
     return res.status(201).json({});
     res.status(201).json({});
   } else {
