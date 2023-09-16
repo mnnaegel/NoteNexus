@@ -19,6 +19,16 @@ const TestNotes = [
     name: "Note 3",
     summary: "This note is for testing",
   },
+  {
+    id: "note_id_4",
+    name: "Note 4",
+    summary: "This note is for testing",
+  },
+  {
+    id: "note_id_5",
+    name: "Note 5",
+    summary: "This note is for testing",
+  },
 ];
 
 function NoteList() {
@@ -30,7 +40,7 @@ function NoteList() {
           {TestNotes.map((note) => {
             // change to Note after
             return (
-              <Grid item xs={8} key={note.id}>
+              <Grid item xs={12} sm={6} md={3} key={note.id}>
                 <NoteCard note={note} />
               </Grid>
             );

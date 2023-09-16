@@ -1,0 +1,39 @@
+$devices: (
+  mobile: 375,
+  tablet: 768,
+  desktopSmall: 1024,
+  desktopMed: 1440,
+  desktopLarge: 2160,
+);
+
+@mixin breakpoint($device) {
+  @media (min-width: #{map-get($devices, $device)}px) {
+    @content;
+  }
+}
+
+// @mixin media-mobile() {
+//     @media (min-width: #{map-get($devices, tablet) -1}px) {
+//         @content;
+//     }
+// }
+
+@mixin media-mobile() {
+  @include breakpoint(mobile);
+}
+
+@mixin media-tablet() {
+  @include breakpoint(tablet);
+}
+
+@mixin media-desktopSmall() {
+  @include breakpoint(desktopSmall);
+}
+
+@mixin media-desktopMed() {
+  @include breakpoint(desktopMed);
+}
+
+@mixin media-desktopLarge() {
+  @include breakpoint(desktopLarge);
+}
