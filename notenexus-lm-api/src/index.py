@@ -7,7 +7,8 @@ from db import (
     get_paragraphs_by_noteid,
     delete_paragraphs_by_id,
     update_paragraphs,
-    vector_similarity_search
+    vector_similarity_search,
+    vector_distance_search
 )
 
 app = Flask(__name__)
