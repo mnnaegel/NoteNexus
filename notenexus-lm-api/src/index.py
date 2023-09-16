@@ -1,8 +1,9 @@
 import json
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from lm import encode_text
 from db.model import Paragraph
 from db import (
+    get_paragraphs_by_noteid,
     delete_paragraphs_by_id,
     update_paragraphs
 )
@@ -44,3 +45,9 @@ def edit_paragraphs():
             update_paragraphs(paragraphs_to_update)
         
     return ''
+
+@app.get("/get_paragraphs/<note_id>")
+def get_paragraphs(note_id):
+    paragraphs = get_paragraphs_by_noteid(note_id)
+    
+    return jsonify(paragraphs)

@@ -43,31 +43,23 @@ def update_paragraphs(paragraphs : list[Paragraph]):
     
     #Write the updated paragraphs
     write_paragraphs(paragraphs)
-    
-    
-    # for 
-    # doc = paragraph.for_es()
-    # res = es.index(index="paragraph", document=doc, id=paragraph.id)
-    # return res['result']
 
-
-# def get_note_by_id(note_id : str):
-#     if not note_id:
-#         raise ValueError("No note_id specified.")
+def get_paragraphs_by_noteid(note_id : str):
+    q = {
+        "term" : {
+            "doc.note_id": {
+                "value" : note_id
+            }
+        }
+    }
     
-#     query = {
-#         "term": {
-#             "note_id":{
-#                 "value" : note_id
-#             }
-#         }  
-#     }
+    res = es.search(index=PARAGRAPH_INDEX, query=q)
+    print("Got %d Hits:" % res['hits']['total']['value'])
     
-#     # resp = es.search(index="test-index", query={"match_all": {}})
-#     # res = es.search(index="paragraph", query=query)
-#     # print("Got %d Hits:" % res['hits']['total']['value'])
-#     # for hit in res['hits']['hits']:
-#     #     print("%(timestamp)s %(author)s: %(text)s" % hit["_source"])
+    rs = []
+    for hit in res['hits']['hits']:
+        doc = hit['_source']['doc']
+        del doc['embedding']
+        rs.append(doc)
     
-#     raise NotImplementedError()
-    
+    return rs
