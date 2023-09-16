@@ -19,7 +19,7 @@ function NoteList() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/notes/" + user?.id)
+      .get("http://localhost:8080/notes/users/" + user?.id)
       .then((response) => {
         setNotes(response.data.data);
       })
