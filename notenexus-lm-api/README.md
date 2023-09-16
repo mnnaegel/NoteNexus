@@ -14,7 +14,7 @@ sh start_api.sh
 # Endpoints
 
 ## GET Requests
-### get_paragraphs (Todo)
+### get_paragraphs (Complete)
 
 Used to get paragraphs for a particular note.
 ```json
@@ -52,8 +52,15 @@ POST /edit_paragraphs
 }
 ```
 
-### get_similar_paragraphs (Todo)
+### get_linked_paragraphs (Todo)
 Encode a query text into a vector and identify similar notes by their embedding
+```json
+POST /get_linked_paragraphs
+{
+    "text_query":"this is just an example.",
+    "threshold":0.5
+}
+```
 
 ### notes_by_keyword (Todo)
 Identify notes which match query keywords by their contents.
