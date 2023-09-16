@@ -1,13 +1,12 @@
 import Link from "next/link";
 import * as React from "react";
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavigationBar() {
   const pages = [
     { name: "Home", href: "/" },
     { name: "Notes", href: "/NoteList" },
     { name: "LinkView", href: "/LinkView" },
+    { name: "Editor", href: "/NoteEditor" },
   ];
   return (
     <div>
