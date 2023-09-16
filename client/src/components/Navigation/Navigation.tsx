@@ -9,10 +9,12 @@ interface INavigationBarProps {
   isNotLoggedIn?: boolean;
 }
 function NavigationBar({ isNotLoggedIn }: INavigationBarProps) {
+function NavigationBar() {
   const pages = [
     { name: "Home", href: "/" },
     { name: "Notes", href: "/NoteList" },
     { name: "LinkView", href: "/LinkView" },
+    { name: "Editor", href: "/NoteEditor" },
   ];
   return isNotLoggedIn ? (
     <div className={styles.NavigationBar}>
