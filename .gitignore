@@ -1,2 +1,3 @@
 notenexus-lm-api/env
 */**/__pycache__
+*/**/.env
