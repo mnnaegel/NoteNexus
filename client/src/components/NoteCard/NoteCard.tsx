@@ -48,7 +48,7 @@ function NoteCard({ note }: INoteCardProps) {
     <div className={styles.Wrapper}>
       <div className={styles.NoteCard} onClick={handleNoteCardClick}>
         <div className={styles.NoteCard__top}>
-          {note.name}
+          {note.title}
           <IconButton
             aria-controls="overflow-menu"
             aria-haspopup="true"

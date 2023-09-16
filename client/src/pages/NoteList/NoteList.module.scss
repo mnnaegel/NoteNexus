@@ -36,4 +36,10 @@
     background-color: $white;
     margin: 0 !important;
   }
+
+  &__noNotes {
+    max-width: 70%;
+    font-size: 4rem;
+    margin: 4rem;
+  }
 }

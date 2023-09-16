@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/nextjs";
+import { Note } from "@/types/note.type";
 
 const TestNotes = [
   {
@@ -38,18 +39,20 @@ const TestNotes = [
 ];
 
 function NoteList() {
-  const [newNoteName, setNewNoteName] = useState<string>("");
   const { user } = useUser();
+  const [newNoteName, setNewNoteName] = useState<string>("");
+  const [notes, setNotes] = useState<Array<Note>>([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8080/users/abc")
+      .get("http://localhost:8080/notes/" + user?.id)
       .then((response) => {
-        console.log(response);
+        setNotes(response.data.data);
+        console.log("set notes");
       })
       .catch((error) => {
         console.error(error);
       });
-  });
+  }, [user]);
 
   const onCreateNote = () => {
     const postData = {
@@ -68,7 +71,7 @@ function NoteList() {
       },
       data: postData,
     };
-
+    console.log("creating note");
     // Make the Axios POST request
     axios(axiosConfig)
       .then((response) => {
@@ -79,6 +82,8 @@ function NoteList() {
         // Handle errors if any
         console.error("Error:", error);
       });
+
+    setNewNoteName("");
   };
 
   return (
@@ -111,14 +116,19 @@ function NoteList() {
           </Button>
         </div>
         <Grid container spacing={2} className={styles.NoteList__cardsContainer}>
-          {TestNotes.map((note) => {
-            // change to Note after
-            return (
-              <Grid item xs={12} sm={6} md={3} key={note.id}>
-                <NoteCard note={note} />
-              </Grid>
-            );
-          })}
+          {notes && notes.length > 0 ? (
+            notes.map((note) => {
+              console.log("note:", note);
+              // change to Note after
+              return (
+                <Grid item xs={12} sm={6} md={3} key={note.id}>
+                  <NoteCard note={note} />
+                </Grid>
+              );
+            })
+          ) : (
+            <div className={styles.NoteList__noNotes}>Create a New Note!</div>
+          )}
         </Grid>
       </div>
     </>
