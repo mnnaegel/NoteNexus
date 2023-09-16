@@ -3,13 +3,14 @@ from dataclasses import dataclass
 
 @dataclass
 class Paragraph:
-    contents : str
+    id : str
     note_id : str
     next : str
     previous : str
+    contents : str
     embedding : np.ndarray
     
-    def for_es(self):
+    def as_doc(self):
         return {
             'contents' : self.contents,
             'note_id' : self.note_id,
