@@ -2,6 +2,8 @@ import styles from "./NoteList.module.scss";
 import Grid from "@mui/material/Grid"; // Grid version 1
 import NoteCard from "../../components/NoteCard/NoteCard";
 import NavigationBar from "@/components/Navigation/Navigation";
+import { Button, Input, TextField } from "@mui/material";
+import { useState } from "react";
 
 const TestNotes = [
   {
@@ -32,11 +34,35 @@ const TestNotes = [
 ];
 
 function NoteList() {
+  const [newNoteName, setNewNoteName] = useState<string>("");
   return (
     <>
       <NavigationBar />
       <div className={styles.NoteList}>
-        <Grid container spacing={2}>
+        <div className={styles.NoteList__create}>
+          <TextField
+            className={styles.NoteList__create__input}
+            label="New Note Name"
+            variant="filled"
+            value={newNoteName}
+            InputProps={{ className: styles.NoteList__create__input }}
+            onChange={(
+              event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => {
+              setNewNoteName(event.target.value);
+            }}
+          />
+
+          <Button
+            className={styles.NoteList__create__button}
+            variant="contained"
+            onClick={() => {
+            }}
+          >
+            Create Note
+          </Button>
+        </div>
+        <Grid container spacing={2} className={styles.NoteList__cardsContainer}>
           {TestNotes.map((note) => {
             // change to Note after
             return (
