@@ -1,5 +1,5 @@
 import NavigationBar from "@/components/Navigation/Navigation";
-import { SignIn, UserButton } from "@clerk/nextjs";
+import { SignIn, SignOutButton, UserButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import styles from "../styles/Home.module.scss";
 
@@ -27,7 +27,8 @@ export default function Home() {
   ) : (
     <div>
       <NavigationBar />
-      YOU ARE SIGNED IN
+        YOU ARE SIGNED IN
+        <SignOutButton />
       <UserButton />
     </div>
   );
