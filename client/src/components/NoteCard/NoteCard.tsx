@@ -1,25 +1,17 @@
 import styles from "./NoteCard.module.scss";
 import { Note } from "@/types/note.type";
-import {
-  Button,
-  CardActions,
-  CardContent,
-  CardHeader,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/router";
-import Card from "@mui/material/Card";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
+import axios from "axios";
 
 interface INoteCardProps {
   note: Partial<Note>;
+  deleteNoteGivenId: (id: string) => void;
 }
 
-function NoteCard({ note }: INoteCardProps) {
+function NoteCard({ note, deleteNoteGivenId }: INoteCardProps) {
   const { push } = useRouter();
   const handleNoteCardClick = () => {
     push("/NoteList/" + note.id);
@@ -34,16 +26,19 @@ function NoteCard({ note }: INoteCardProps) {
     setAnchorElement(null);
   };
   const handleRename = (event: any) => {
+    event.stopPropagation();
     handleClose(event);
     // rename given note id?
   };
   const handleRemove = (event: any) => {
+    event.stopPropagation();
+    deleteNoteGivenId(note.id || "");
     handleClose(event);
-    // remove given note id?
   };
   const handleOpen = (event: any) => {
     // open given note id?
   };
+
   return (
     <div className={styles.Wrapper}>
       <div className={styles.NoteCard} onClick={handleNoteCardClick}>

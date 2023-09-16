@@ -30,7 +30,7 @@ function NoteList() {
     const postData = {
       id: uuidv4(),
       title: data.newNoteName,
-      content: [],
+      summary: "",
       author: user?.id,
     } as Partial<Note>;
 
@@ -46,8 +46,24 @@ function NoteList() {
     axios(axiosConfig)
       .then((response) => {
         console.log("Response:", response.data);
-        setNotes([...notes, postData as Partial<Note>]);
+        setNotes([...(notes || []), postData as Partial<Note>]);
         reset();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const deleteNoteGivenId = (id: string) => {
+    axios
+      .delete("http://localhost:8080/notes/" + id)
+      .then(() => {
+        setNotes((notes) => {
+          return notes.filter((note) => {
+            return note.id !== id;
+          });
+        });
+        return;
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -84,7 +100,7 @@ function NoteList() {
               // change to Note after
               return (
                 <Grid item xs={12} sm={6} md={3} key={note.id}>
-                  <NoteCard note={note} />
+                  <NoteCard note={note} deleteNoteGivenId={deleteNoteGivenId} />
                 </Grid>
               );
             })

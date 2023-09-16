@@ -4,6 +4,6 @@ export type Note = {
   id: string;
   title: string;
   summary?: string;
-  content: Array<Paragraph>;
+  content?: Array<Paragraph>;
   links: Array<string>;
 };
