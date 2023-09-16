@@ -150,7 +150,8 @@ func insertNote(c *gin.Context, db *mongo.Database) {
 
 func main() {
     // Set client options
-    clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+    clientOptions := options.Client().ApplyURI("mongodb+srv://maxnaegel:vA8MqUgftaQJLE4G@vA8MqUgftaQJLE4Gcluster0.hx5mprc.mongodb.net/")
+
 
     // Connect to MongoDB
     client, err := mongo.Connect(context.TODO(), clientOptions)
