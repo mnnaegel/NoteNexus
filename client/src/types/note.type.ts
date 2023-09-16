@@ -5,4 +5,5 @@ export type Note = {
   name: string;
   summary?: string;
   content: Array<Paragraph>;
+  links: Array<string>;
 };

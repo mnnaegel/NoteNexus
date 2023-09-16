@@ -1,3 +1,39 @@
+@import "../../styles/variables.scss";
+@import "../../styles/breakpoints.scss";
+
 .NoteList {
-    
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 100%;
+  align-items: center;
+  &__create {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    justify-content: end;
+    height: 6rem;
+    width: 100%;
+    padding-right: 15%;
+    // background-color: $viridian;
+    border-bottom: 1px solid $viridian;
+
+    &__input {
+      color: $black-olive;
+    }
+
+    &__button {
+      color: $black-olive;
+      background-color: $celadon;
+      &:hover {
+        background-color: $white;
+      }
+    }
+  }
+
+  &__cardsContainer {
+    max-width: 70%;
+    background-color: $white;
+    margin: 0 !important;
+  }
 }

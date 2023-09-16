@@ -1,5 +1,6 @@
 import Link from "next/link";
 import * as React from "react";
+import styles from "./Navigation.module.scss";
 
 function NavigationBar() {
   const pages = [
@@ -9,9 +10,11 @@ function NavigationBar() {
     { name: "Editor", href: "/NoteEditor" },
   ];
   return (
-    <div>
+    <div className={styles.NavigationBar}>
       {pages.map((el) => (
-        <Link href={el.href}>{el.name}</Link>
+        <Link href={el.href} key={el.name}>
+          {el.name}
+        </Link>
       ))}
     </div>
   );
