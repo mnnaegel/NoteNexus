@@ -1,0 +1,28 @@
+> make user -- id,name,email from useuser object
+curl -X POST \
+  http://localhost:8080/users \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"id": "abc",
+	"name": "John Doe",
+	"email": "johndoe@example.com"
+}'
+
+> get user by id
+curl -X GET http://localhost:8080/users/abc
+
+
+> make note -- id,title,content,author from note object
+curl -X POST \
+  http://localhost:8080/notes \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"id": "note12345",
+	"title": "My Note Title",
+	"content": "This is the content of the note.",
+	"author": "abc"
+}'
+
+> get notes by id
+curl -X GET http://localhost:8080/notes/abc
+
