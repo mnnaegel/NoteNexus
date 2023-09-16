@@ -1,0 +1,30 @@
+// @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+
+
+// // For now since we're building this for a desktop screen, there are no variable sizes
+// @mixin typography($weight: 400, $size: 1rem, $line-height: "normal", $color: black ) {
+//     font-family: 'Lato', sans-serif;
+//     font-weight: $weight;
+//     font-size: $size;
+//     line-height: $line-height;
+//     color: $color;
+// }
+
+
+// @mixin general-paragraph($color, $line-height: "normal") {
+//     @include typography(400, 1.2rem, $line-height, $color: $color);   
+// }
+
+// @mixin nav-search($color) {
+//     @include typography($weight: 300, $size: 24px, $color: $color)
+// }
+
+// @mixin card-heading($color) {
+
+//     @include typography($weight: 700, $size: 2rem, $color: $color)
+// }
+
+// // The placeholder text will be the same but with a different color
+// @mixin editor-text($color) {
+//     @include typography($weight: 400, $size: 1rem, $color: $color, $line-height: 1.2rem)
+// }

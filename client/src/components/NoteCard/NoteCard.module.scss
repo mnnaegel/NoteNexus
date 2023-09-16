@@ -1,3 +1,40 @@
+@import "../../styles/variables.scss";
+
+.Wrapper {
+  width: 100%;
+  position: relative;
+}
+
 .NoteCard {
-  background-color: red;
+  display: flex;
+  flex-direction: column;
+  // aspect-ratio: 1;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  border: 1px solid $viridian;
+  box-shadow: #a4a4a4 0px 2px 3px 0px;
+
+  &:hover {
+    border: 1px solid $celadon;
+    .NoteCard__top {
+      border-bottom: 1px solid $celadon;
+    }
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 8px 14px 16px;
+    font-size: 24px;
+    font-weight: 700;
+    border-bottom: 1px solid $viridian;
+  }
+
+  &__body {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-height: 6rem;
+    padding: 16px 8px 14px 16px;
+  }
 }

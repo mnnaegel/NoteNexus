@@ -1,18 +1,19 @@
+import NavigationBar from "@/components/Navigation/Navigation";
 import styles from "./LinkView.module.scss";
 
 const TestNotes = [
   {
-    id: "123",
+    id: "note_id_1",
     name: "Note 1",
     summary: "This note is for testing",
   },
   {
-    id: "123",
+    id: "note_id_2",
     name: "Note 2",
     summary: "This note is for testing",
   },
   {
-    id: "123",
+    id: "note_id_3",
     name: "Note 3",
     summary: "This note is for testing",
   },
@@ -21,11 +22,14 @@ const TestNotes = [
 function LinkView() {
   return (
     // change later to graph or something
-    <div className={styles.LinkView}>
-      {TestNotes.map((note) => {
-        return <div key={note.id}>{note.id}</div>;
-      })}
-    </div>
+    <>
+      <NavigationBar />
+      <div className={styles.LinkView}>
+        {TestNotes.map((note) => {
+          return <div key={note.id}>{note.id}</div>;
+        })}
+      </div>
+    </>
   );
 }
 
