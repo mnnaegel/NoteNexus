@@ -1,3 +1,4 @@
+# Setup
 ### Run this the first time
 ```
 python -m venv env
@@ -10,11 +11,21 @@ pip install -r requirements.txt
 sh start_api.sh
 ```
 
-### Endpoints
-**edit_paragraphs**
+# Endpoints
 
-Used for creating new paragraphs, and updating or deleting existing paragraphs.
+## GET Requests
+### get_paragraphs (Todo)
+
+Used to get paragraphs for a particular note.
+```json
+GET /get_paragraphs/{note_id}
 ```
+
+## POST Requests
+
+### edit_paragraphs (Complete)
+Used for creating new paragraphs, and updating or deleting existing paragraphs.
+```json
 POST /edit_paragraphs
 {
     "update":{
@@ -41,3 +52,8 @@ POST /edit_paragraphs
 }
 ```
 
+### get_similar_paragraphs (Todo)
+Encode a query text into a vector and identify similar notes by their embedding
+
+### notes_by_keyword (Todo)
+Identify notes which match query keywords by their contents.

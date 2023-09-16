@@ -12,9 +12,10 @@ class Paragraph:
     
     def as_doc(self):
         return {
-            'contents' : self.contents,
+            'id':self.id,
             'note_id' : self.note_id,
             'next' : self.next,
             'previous' : self.previous,
+            'contents' : self.contents,
             'embedding' : self.embedding.tolist(), 
         }
