@@ -4,6 +4,7 @@ export type Note = {
   id: string;
   title: string;
   summary?: string;
-  content: Array<Paragraph>;
+  author: string; // userid of author
+  content?: Array<Paragraph>;
   links: Array<string>;
 };

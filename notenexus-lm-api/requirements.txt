@@ -1,2 +1,5 @@
+elasticsearch==8.9.0
 Flask==2.3.3
+Flask_Cors==4.0.0
+numpy==1.25.2
 sentence_transformers==2.2.2

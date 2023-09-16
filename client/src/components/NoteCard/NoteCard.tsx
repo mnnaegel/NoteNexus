@@ -1,26 +1,22 @@
 import styles from "./NoteCard.module.scss";
 import { Note } from "@/types/note.type";
-import {
-  Button,
-  CardActions,
-  CardContent,
-  CardHeader,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { IconButton, Menu, MenuItem, Modal } from "@mui/material";
 import { useRouter } from "next/router";
-import Card from "@mui/material/Card";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface INoteCardProps {
   note: Partial<Note>;
+  deleteNoteGivenId: (id: string) => void;
+  updateNote: (data: Partial<Note>) => void;
 }
 
-function NoteCard({ note }: INoteCardProps) {
+function NoteCard({ note, deleteNoteGivenId, updateNote }: INoteCardProps) {
   const { push } = useRouter();
+  const [renameModalOpen, setRenameModalOpen] = useState<boolean>(false);
+  const { register, handleSubmit } = useForm();
+
   const handleNoteCardClick = () => {
     push("/NoteList/" + note.id);
   };
@@ -29,23 +25,60 @@ function NoteCard({ note }: INoteCardProps) {
     setAnchorElement(event.currentTarget);
     event.stopPropagation();
   };
-  const handleClose = (event: any) => {
+  const handleCloseOptions = (event: any) => {
     event.stopPropagation();
     setAnchorElement(null);
   };
-  const handleRename = (event: any) => {
-    handleClose(event);
-    // rename given note id?
+  const handleRenameOpen = (event: any) => {
+    event.stopPropagation();
+    setRenameModalOpen(true);
   };
-  const handleRemove = (event: any) => {
-    handleClose(event);
-    // remove given note id?
+  const onRenameNote = (data: any, event: any) => {
+    updateNote({
+      id: note.id,
+      title: data.newNoteTitle,
+      summary: note.summary || "",
+      author: note.author,
+    });
+    handleCloseOptions(event);
+    setRenameModalOpen(false);
   };
-  const handleOpen = (event: any) => {
+  const handleDeleteNote = (event: any) => {
+    event.stopPropagation();
+    deleteNoteGivenId(note.id || "");
+    handleCloseOptions(event);
+  };
+  const handleOpenNote = (event: any) => {
     // open given note id?
   };
+
   return (
     <div className={styles.Wrapper}>
+      <Modal
+        open={renameModalOpen}
+        onClose={() => {
+          setRenameModalOpen(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <form
+          // className={styles.NoteList__create}
+          onSubmit={handleSubmit(onRenameNote)}
+        >
+          <input
+            className={styles.NoteList__create__input}
+            placeholder="Start a new note"
+            {...register("newNoteTitle", {
+              required: true,
+              maxLength: 30,
+            })}
+          />
+          <button className={styles.NoteList__create__submit} type="submit">
+            Rename
+          </button>
+        </form>
+      </Modal>
       <div className={styles.NoteCard} onClick={handleNoteCardClick}>
         <div className={styles.NoteCard__top}>
           {note.title}
@@ -60,11 +93,11 @@ function NoteCard({ note }: INoteCardProps) {
             id="overflow-menu"
             anchorEl={anchorElement}
             open={!!anchorElement}
-            onClose={handleClose}
+            onClose={handleCloseOptions}
           >
-            <MenuItem onClick={handleRename}>Rename</MenuItem>
-            <MenuItem onClick={handleRemove}>Remove</MenuItem>
-            <MenuItem onClick={handleOpen}>Open in new tab</MenuItem>
+            <MenuItem onClick={handleRenameOpen}>Rename</MenuItem>
+            <MenuItem onClick={handleDeleteNote}>Remove</MenuItem>
+            <MenuItem onClick={handleOpenNote}>Open in new tab</MenuItem>
           </Menu>
         </div>
         <div className={styles.NoteCard__body}>{note.summary}</div>
