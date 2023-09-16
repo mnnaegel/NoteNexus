@@ -223,6 +223,31 @@ func insertNote(c *gin.Context, db *mongo.Database) {
 	})
 }
 
+func getNoteById(c *gin.Context, db *mongo.Database) {
+	id := c.Param("id")
+
+	// query mongodb for note with id = id
+	notes := db.Collection("notes")
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	var result note
+	err := notes.FindOne(ctx, bson.M{"id": id}).Decode(&result)
+	if err != nil {
+		fmt.Println(err);
+		// exit 
+		c.JSON(http.StatusNotFound, gin.H{
+			"status": http.StatusNotFound,
+			"message": "Note not found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": http.StatusOK,
+		"message": "Note found",
+		"data": result,
+	})
+}
 func main() {
     // Set client options
     clientOptions := options.Client().ApplyURI("mongodb+srv://maxnaegel:vA8MqUgftaQJLE4G@vA8MqUgftaQJLE4Gcluster0.hx5mprc.mongodb.net/")
@@ -257,8 +282,11 @@ func main() {
 		router.POST("/users", func(c *gin.Context) {
 			insertUser(c, db)
 		})
-		router.GET("/notes/:id", func(c *gin.Context) {
+		router.GET("/notes/users/:id", func(c *gin.Context) {
 			getNotesByAuthor(c, db)
+		})
+		router.GET("/notes/:id", func(c *gin.Context) {
+			getNoteById(c, db)
 		})
 		router.POST("/notes", func(c *gin.Context) {
 			insertNote(c, db)

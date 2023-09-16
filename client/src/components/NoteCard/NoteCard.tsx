@@ -18,7 +18,7 @@ function NoteCard({ note, deleteNoteGivenId, updateNote }: INoteCardProps) {
   const { register, handleSubmit } = useForm();
 
   const handleNoteCardClick = () => {
-    push("/NoteList/" + note.id);
+    push("/notes/" + note.id);
   };
   const [anchorElement, setAnchorElement] = useState(null);
   const handleClick = (event: any) => {

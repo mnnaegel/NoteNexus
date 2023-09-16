@@ -9,6 +9,8 @@ import { useUser } from "@clerk/nextjs";
 import { Note } from "@/types/note.type";
 import { useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
+import logo from "../../assets/temporaryLogo.png";
+import Image from "next/image";
 
 function NoteList() {
   const { user } = useUser();
@@ -17,7 +19,7 @@ function NoteList() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/notes/" + user?.id)
+      .get("http://localhost:8080/notes/users/" + user?.id)
       .then((response) => {
         setNotes(response.data.data);
       })
@@ -115,12 +117,13 @@ function NoteList() {
             </button>
           </div>
         </form>
-
-        <Grid container spacing={2} className={styles.NoteList__cardsContainer}>
-          {notes && notes.length > 0 ? (
-            notes.map((note) => {
-              console.log("note:", note);
-              // change to Note after
+        {notes && notes.length > 0 ? (
+          <Grid
+            container
+            spacing={2}
+            className={styles.NoteList__cardsContainer}
+          >
+            {notes.map((note) => {
               return (
                 <Grid item xs={12} sm={6} md={3} key={note.id}>
                   <NoteCard
@@ -130,11 +133,16 @@ function NoteList() {
                   />
                 </Grid>
               );
-            })
-          ) : (
-            <div className={styles.NoteList__noNotes}>Create a New Note!</div>
-          )}
-        </Grid>
+            })}
+          </Grid>
+        ) : (
+          <div className={styles.NoteList__noNotes}>
+            <p className={styles.NoteList__noNotes__header}>
+              Create a New Note!
+            </p>
+            <Image src={logo} alt="logo" height={160} width={160} />
+          </div>
+        )}
       </div>
     </>
   );
