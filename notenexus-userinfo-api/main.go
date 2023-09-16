@@ -25,7 +25,7 @@ type user struct {
 type note struct {
 	Id string `bson:"id" json:"id"`
 	Title string `bson:"title" json:"title"`
-	Content string `bson:"content" json:"content"`
+	Summary string `bson:"summary" json:"summary"`
 	Author string `bson:"author" json:"author"`
 }
 
