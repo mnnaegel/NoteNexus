@@ -70,6 +70,29 @@ function NoteList() {
       });
   };
 
+  const updateNote = (data: Partial<Note>) => {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .patch("http://localhost:8080/notes/" + data.id, data, {
+        headers,
+      })
+      .then((response) => {
+        setNotes([
+          ...(notes.map((note) => {
+            if (note.id === data.id) {
+              return data;
+            }
+            return note;
+          }) || []),
+        ]);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <>
       <NavigationBar />
@@ -100,7 +123,11 @@ function NoteList() {
               // change to Note after
               return (
                 <Grid item xs={12} sm={6} md={3} key={note.id}>
-                  <NoteCard note={note} deleteNoteGivenId={deleteNoteGivenId} />
+                  <NoteCard
+                    note={note}
+                    deleteNoteGivenId={deleteNoteGivenId}
+                    updateNote={updateNote}
+                  />
                 </Grid>
               );
             })
