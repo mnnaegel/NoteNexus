@@ -1,20 +1,17 @@
 @import "../../styles/variables.scss";
 .NoteEditor {
-  height: 100vh;
-  background-color: rgb(235, 253, 255);
-//   background-image: radial-gradient(#8ddae070 2px, transparent 2px),
-//     radial-gradient(#8ddae070 2px, $white 2px);
-//   background-size: 80px 80px;
-//   background-position: 0 0, 40px 40px;
-
-  .container {
-  }
+  min-height: 100vh;
+  height: fit-content;
+  background-color: rgb(243, 254, 255);
 
   h1 {
     color: $black-olive;
     text-align: center;
   }
 
+  .container {
+    padding-bottom: 5rem;
+  }
   .title {
     color: black;
     line-height: 3rem;
@@ -34,6 +31,20 @@
     border: none;
     box-shadow: rgba(0, 0, 0, 0.0) 0px 2px 5px;
   }
+
+  .viewerpara {
+    display: flex;
+    justify-content: left;
+    text-align: left;
+    font-family: 1.25rem;
+    border-radius: 10px;
+    background-color: $white;
+    margin-bottom: 0.25rem;
+    box-shadow: rgba(0, 0, 0, 0.0) 0px 2px 5px;
+    border-radius: 10px;
+    padding: 1em;
+  }
+
   textarea {
     padding: 1rem;
     font-size: 1.25rem;
