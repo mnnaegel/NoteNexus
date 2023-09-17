@@ -10,7 +10,8 @@ from db import (
     vector_similarity_search,
     vector_distance_search,
     search_paragraph_contents,
-    get_paragraph_neighbors
+    get_paragraph_neighbors,
+    get_paragraph_by_paraid
 )
 
 
@@ -84,32 +85,42 @@ def get_knn_links():
     
     
     k = 3 if 'k' not in body else body['k']
-    
-    rs = get_paragraph_neighbors(body['para_id'], body['note_ids'], k)
+    paragraph = get_paragraph_by_paraid(body['para_id'])
+    rs = get_paragraph_neighbors(paragraph, body['note_ids'], k)
 
+    result = {
+        "links" : rs if rs else []
+    }
     
-    if rs:
-        return jsonify(rs)
-    else:
-        return jsonify([])
+    if 'include_summary' in body and body['include_summary']:
+        contents = paragraph['contents']
+        if len(contents) > 250:
+            summary = summarize_documents(contents)
+        else:
+            summary = contents
+        result['summary'] = summary
+    
+    
+    return jsonify(result)
 
 
 
 
 
 # Used for writing new paragraphs, and update or deleting existing paragraphs
-@app.post('/get_linked_paragraphs')
-def get_linked_paragraphs():
+@app.post('/get_similarity_links')
+def get_similarity_links():
     body = request.json
     
-    if 'text_query' not in body:
-        return "theres no text query", 400
+    if 'para_id' not in body:
+        return "theres no para_id", 400
     
-    query_vector = encode_text(body['text_query'])
+    paragraph = get_paragraph_by_paraid(body['para_id'])
     threshold = 0.5 if 'threshold' not in body else float(body['threshold'])
-    rs = vector_similarity_search(query_vector,threshold)
+    rs = vector_similarity_search(paragraph['embedding'],threshold)
+    
     combined_contents = "\n".join([result['contents'] for result in rs])
-                             
+                 
     result = {
         "paragraphs": rs
     }
