@@ -144,7 +144,7 @@ def vector_similarity_search(query_vector : list[float], threshold : float, igno
             "query" : {
                 "bool":{
                     "must_not":[
-                        { "terms": {"note_ids": ignore_notes}}
+                        { "terms": {"note_id": ignore_notes}}
                     ]
                 }
             },

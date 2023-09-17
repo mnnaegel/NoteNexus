@@ -16,7 +16,7 @@ import {
 import SideBar from "@/components/SideBar/SideBar";
 import NavigationBar from "@/components/Header/Header";
 import CloseIcon from "@mui/icons-material/Close";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 interface Paragraph {
   key: string;
@@ -253,13 +253,36 @@ export default function Page() {
     // There has been a change to a specific field
   };
 
-  function linkView() {
-    setEditorView(false);
+  function linkRequest(paraId: string, threshold: string) {
+      axios
+        .post(`http://127.0.0.1:5000/get_similarity_links`, 
+        {
+          "include_summary":"",
+          "para_id": paraId ,
+          "threshold": threshold
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   }
 
+  function linkView() {
+    setEditorView(false);
+    shrink();
+  }
+  function grow() {
+    gsap.timeline().to(containerRef.current, {
+      width: "100%",
+      duration: 1,
+      ease: Power3.easeInOut,
+    });
+
+  }
   function shrink() {
     gsap.timeline().to(containerRef.current, {
-      left: "10%",
       width: "75%",
       duration: 1,
       ease: Power3.easeInOut,
@@ -289,10 +312,10 @@ export default function Page() {
     }
     return (
       <div id={para.id} className={styles.viewerpara}>
-        <IconButton className={styles.manuallink}>
-          <OpenInNewIcon/>
+        <p>{para.contents}</p>
+        <IconButton className={styles.manuallink} onClick={() => linkRequest(para.id, "0.55")}>
+          <OpenInNewIcon />
         </IconButton>
-        {para.contents}
       </div>
     );
   }
@@ -303,7 +326,7 @@ export default function Page() {
         noteId={note_id}
         saveClick={updateNote}
         linkView={linkView}
-        editorView={() => setEditorView(true)}
+        editorView={() => {setEditorView(true); grow()}}
       />
       <NavigationBar />
       <Collapse in={alertOpen}>
@@ -327,22 +350,17 @@ export default function Page() {
       </Collapse>
       <Container className={styles.container}>
         <div className={styles.title}>
-          <h1>Now Editing: {note?.title}</h1>
+          <h1>Now {editorView?"Editing":"Viewing"}: {note?.title}</h1>
         </div>
         <form>
           <Grid container ref={containerRef} className={styles.grid}>
             {/* View Mode */}
             {!editorView && (
               <Grid item container spacing={1} xs={12}>
-                <Grid item container xs={9}>
-                  <Grid item xs={12}>
-                    {editorContent.map((el) => {
-                      return createParagraph(el);
-                    })}
-                  </Grid>
-                </Grid>
-                <Grid item xs={3}>
-                  <p>Test</p>
+                <Grid item xs={12}>
+                  {editorContent.map((el) => {
+                    return createParagraph(el);
+                  })}
                 </Grid>
               </Grid>
             )}

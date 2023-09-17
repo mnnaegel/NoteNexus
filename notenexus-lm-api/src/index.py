@@ -117,7 +117,7 @@ def get_similarity_links():
     
     paragraph = get_paragraph_by_paraid(body['para_id'])
     threshold = 0.5 if 'threshold' not in body else float(body['threshold'])
-    rs = vector_similarity_search(paragraph['embedding'],threshold)
+    rs = vector_similarity_search(paragraph['embedding'],threshold, [paragraph["note_id"]])
     
     combined_contents = "\n".join([result['contents'] for result in rs])
                  

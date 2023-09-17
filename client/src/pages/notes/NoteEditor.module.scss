@@ -32,10 +32,12 @@
     box-shadow: rgba(0, 0, 0, 0.0) 0px 2px 5px;
   }
 
+  p {
+    width: 100%;
+  }
   .manuallink {
-    position: relative;
-    right: 0;
-    top: 0;
+    height: 2.5rem;
+    width: 2.5rem;
   }
 
   .viewerpara {
