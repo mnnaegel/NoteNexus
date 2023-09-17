@@ -1,7 +1,17 @@
-.NavigationBar {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  font-size: 20px; // change later
-  margin: 30px auto;
+@import "../../styles/variables.scss";
+
+.Header {
+  &__navigationBar {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 20px; // change later
+    margin: 10px auto;
+    padding-bottom: 18px;
+    border-bottom: 1px solid $viridian;
+
+    &__item {
+      color: $black-olive;
+    }
+  }
 }

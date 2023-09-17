@@ -53,6 +53,8 @@ function NoteCard({ note, deleteNoteGivenId, updateNote }: INoteCardProps) {
     handleCloseOptions(event);
   };
   const handleOpenNote = (event: any) => {
+    <a target="_blank" href={URL}></a>;
+
     // open given note id?
   };
 
@@ -116,7 +118,15 @@ function NoteCard({ note, deleteNoteGivenId, updateNote }: INoteCardProps) {
           >
             <MenuItem onClick={handleRenameOpen}>Rename</MenuItem>
             <MenuItem onClick={handleDeleteNote}>Remove</MenuItem>
-            <MenuItem onClick={handleOpenNote}>Open in new tab</MenuItem>
+            <MenuItem
+              onClick={(event: any) => {
+                event.stopPropagation();
+              }}
+            >
+              <a href={"/notes/" + note.id} target="_blank" rel="noopener">
+                Open in new tab
+              </a>
+            </MenuItem>
           </Menu>
         </div>
         <div className={styles.NoteCard__body}>{note.summary}</div>
