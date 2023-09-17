@@ -14,7 +14,12 @@ import Image from "next/image";
 
 function NoteList() {
   const { user } = useUser();
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [notes, setNotes] = useState<Array<Partial<Note>>>([]);
 
   useEffect(() => {
@@ -103,6 +108,9 @@ function NoteList() {
           className={styles.NoteList__create}
           onSubmit={handleSubmit(onCreateNote)}
         >
+          <span className={styles.NoteList__create__input__errors}>
+            {errors.newNoteName && "Please name your note"}
+          </span>
           <div className={styles.NoteList__create__wrapper}>
             <input
               className={styles.NoteList__create__input}
@@ -112,6 +120,7 @@ function NoteList() {
                 maxLength: 30,
               })}
             />
+
             <button className={styles.NoteList__create__submit} type="submit">
               <AddIcon />
             </button>

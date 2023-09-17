@@ -15,7 +15,11 @@ interface INoteCardProps {
 function NoteCard({ note, deleteNoteGivenId, updateNote }: INoteCardProps) {
   const { push } = useRouter();
   const [renameModalOpen, setRenameModalOpen] = useState<boolean>(false);
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const handleNoteCardClick = () => {
     push("/notes/" + note.id);
@@ -62,21 +66,36 @@ function NoteCard({ note, deleteNoteGivenId, updateNote }: INoteCardProps) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <form
-          // className={styles.NoteList__create}
-          onSubmit={handleSubmit(onRenameNote)}
-        >
-          <input
-            className={styles.NoteList__create__input}
-            placeholder="Start a new note"
-            {...register("newNoteTitle", {
-              required: true,
-              maxLength: 30,
-            })}
-          />
-          <button className={styles.NoteList__create__submit} type="submit">
-            Rename
-          </button>
+        <form onSubmit={handleSubmit(onRenameNote)} className={styles.Modal}>
+          <div className={styles.Modal__wrapper}>
+            <span className={styles.Modal__title}>Rename</span>
+            <div className={styles.Modal__body}>Please enter a new name</div>
+            <input
+              className={styles.Modal__input}
+              placeholder="My Note..."
+              {...register("newNoteTitle", {
+                required: { value: true, message: "Required" },
+                maxLength: 30,
+              })}
+            />
+            <div className={styles.Modal__buttons}>
+              <span className={styles.Modal__input__errors}>
+                {errors.newNoteTitle && "Please rename your note"}
+              </span>
+
+              <button
+                className={styles.Modal__buttons__cancel}
+                onClick={() => {
+                  setRenameModalOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button className={styles.Modal__buttons__submit} type="submit">
+                OK
+              </button>
+            </div>
+          </div>
         </form>
       </Modal>
       <div className={styles.NoteCard} onClick={handleNoteCardClick}>

@@ -27,11 +27,13 @@
     padding-bottom: 1em;
     border-bottom: 1px solid $viridian;
     background-color: $white;
+    display: flex;
     &__wrapper {
       width: 300px;
       margin: 0 auto;
       position: relative;
       justify-content: center;
+      flex-direction: row;
       height: 2.5rem;
     }
     &__input {
@@ -40,6 +42,14 @@
       padding: 1em;
       border-radius: 1em;
       color: $black-olive;
+
+      &__errors {
+        position: absolute; // change later
+        right: 50%;
+        top: 62px;
+        color: red;
+        font-size: 14px;
+      }
     }
 
     &__submit {
