@@ -22,10 +22,38 @@
   //   $celadon 49.27%,
   //   #fff 100%
   // );
+
+  &__top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+  }
+  &__filter {
+    width: 300px;
+
+    &__input {
+      height: 2.5rem;
+      padding: 1em;
+      border-radius: 1em;
+      color: $black-olive;
+    }
+
+    &__search {
+      position: absolute;
+      height: 100%;
+      right: 0;
+      border-radius: 0 1em 1em 0;
+      color: $black-olive;
+      background-color: $celadon;
+
+      transition: 300ms;
+      &:hover {
+        background-color: $white;
+      }
+    }
+  }
   &__create {
-    width: 100%;
-    margin: 0 auto;
-    padding-bottom: 1em;
     background-color: $white;
     display: flex;
     &__wrapper {
