@@ -1,4 +1,5 @@
-import json
+import json, os
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from lm import encode_text
@@ -7,9 +8,11 @@ from db import (
     get_paragraphs_by_noteid,
     delete_paragraphs_by_id,
     update_paragraphs,
-    vector_similarity_search
+    vector_similarity_search,
+    vector_distance_search
 )
 
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
 

@@ -1,11 +1,12 @@
+import os
 from db.model import Paragraph
 from elasticsearch import Elasticsearch, helpers
 
 PARAGRAPH_INDEX = 'paragraph'
 
 es = Elasticsearch(
-    "https://34.135.245.185:9200",
-    basic_auth=('elastic','WdKf6dzpHNwdNrYlb4m-'),
+    os.environ['ELASTIC_CLUSTER'],
+    basic_auth=(os.environ['ELASTIC_USER'],os.environ['ELASTIC_PASS']),
     verify_certs=False
 )
 
@@ -88,6 +89,37 @@ def vector_similarity_search(query_vector : list[float], threshold : float):
             doc = hit['_source']
             del doc['embedding']
             doc['similarity'] = score
+            rs.append(doc)
+    
+    return rs
+
+def vector_distance_search(query_vector : list[float], threshold : float):
+    q = {
+        "script_score": {
+            "query" : {
+                "match_all":{}
+            },
+            "script": {
+                "source": """
+                    double value = l2norm(params.query_vector, 'embedding');
+                    return value;
+                """, 
+                "params": {
+                    "query_vector": query_vector
+                }
+            }
+        }
+    }
+    
+    res = es.search(index=PARAGRAPH_INDEX, query=q)
+    
+    rs = []
+    for hit in res['hits']['hits']:
+        score = float(hit['_score'])
+        if True:
+            doc = hit['_source']
+            del doc['embedding']
+            doc['distance'] = score
             rs.append(doc)
     
     return rs
