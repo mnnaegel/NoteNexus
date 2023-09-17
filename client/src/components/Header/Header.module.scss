@@ -14,7 +14,12 @@
       color: $black-olive;
       transition: 300ms;
       &:hover {
-        font-weight: 600;
+        font-weight: 700;
+        color: $brunswick-green;
+      }
+
+      &--active {
+        font-weight: 700;
         color: $brunswick-green;
       }
     }
