@@ -123,7 +123,7 @@ def get_similarity_links():
     
     paragraph = get_paragraph_by_paraid(body['para_id'])
     threshold = 0.5 if 'threshold' not in body else float(body['threshold'])
-    rs = vector_similarity_search(paragraph['embedding'],threshold)
+    rs = vector_similarity_search(paragraph['embedding'],threshold, [paragraph["note_id"]])
     
     combined_contents = "\n".join([result['contents'] for result in rs])
                  
@@ -132,7 +132,9 @@ def get_similarity_links():
     }
     
     if 'include_summary' in body and body['include_summary']:
+        print("test summarization 1")
         if len(combined_contents) > 250:
+            print("test summarization 2")
             summary = summarize_documents(combined_contents)
         else:
             summary = None

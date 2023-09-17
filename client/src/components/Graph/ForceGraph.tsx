@@ -2,19 +2,19 @@ import React, { useRef, useEffect, useState, use } from "react";
 import * as d3 from "d3";
 import { SimulationNodeDatum } from "d3";
 
-type Node = {
+export type Node = {
   id: number;
-  noteId: number;
+  noteId: string;
 }
 
-type Link = {
-  source: number;
-  target: number;
+export type Link = {
+  source: string;
+  target: string;
 };
 
 class GraphNode implements SimulationNodeDatum {
   id: number;
-  noteId: number;
+  noteId: string;
   index?: number;
   x?: number;
   y?: number;
@@ -23,7 +23,7 @@ class GraphNode implements SimulationNodeDatum {
   fx?: number | null;
   fy?: number | null;
 
-  constructor(id: number, noteId: number) {
+  constructor(id: number, noteId: string) {
     this.id = id;
     this.noteId = noteId;
   }
@@ -49,6 +49,10 @@ const ForceGraph: React.FC<GraphProps> = ({ nodes, links }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [graphNodes, setGraphNodes] = useState<GraphNode[]>(nodes.map(node => new GraphNode(node.id, node.noteId)));
   const [graphLinks, setGraphLinks] = useState<GraphLinks[]>(links.map(link => new GraphLinks(graphNodes.find(node => node.noteId == link.source)!, graphNodes.find(node => node.noteId == link.target)!)));
+
+  const defaultColor = "#69b3a2";
+  const hoverColor = "darkgreen";
+
 
   useEffect(() => {
     setGraphNodes(nodes.map(node => new GraphNode(node.id, node.noteId)));
@@ -91,7 +95,13 @@ const ForceGraph: React.FC<GraphProps> = ({ nodes, links }) => {
       .enter()
       .append("circle")
       .attr("r", 10)
-      .style("fill", "#69b3a2")
+      .style("fill", defaultColor)
+      .on("mouseover", function() { // Using function to retain 'this' context
+        d3.select(this).style("fill", hoverColor);
+      })
+      .on("mouseout", function() {
+        d3.select(this).style("fill", defaultColor);
+      });
 
     // Update the nodes and links positions on each "tick"
     simulation.on("tick", () => {
@@ -120,7 +130,7 @@ const ForceGraph: React.FC<GraphProps> = ({ nodes, links }) => {
         border: "4px solid black",
       }}
     >
-      <svg ref={svgRef} width={1400} height={800}></svg>
+      <svg ref={svgRef} width={1000} height={1000}></svg>
     </div>
   );
 };

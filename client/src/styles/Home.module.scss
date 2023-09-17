@@ -7,8 +7,7 @@
     $secondary 60%,
     $primary 100%
   );
-
-  height: calc(100vh - 53px); // change
+  min-height: 100vh;
   &__container {
     margin: 0 auto;
     padding-top: 3rem;
@@ -51,7 +50,7 @@
   }
 
   &__auth {
-    height: calc(100vh - 47px);
+    min-height: 100vh;
     background: radial-gradient(
       120% 100% at 50% 10%,
       transparent 37%,

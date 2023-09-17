@@ -32,6 +32,14 @@
     box-shadow: rgba(0, 0, 0, 0.0) 0px 2px 5px;
   }
 
+  p {
+    width: 100%;
+  }
+  .manuallink {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
   .viewerpara {
     display: flex;
     justify-content: left;
