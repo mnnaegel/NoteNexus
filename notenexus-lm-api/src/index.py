@@ -8,7 +8,8 @@ from db import (
     delete_paragraphs_by_id,
     update_paragraphs,
     vector_similarity_search,
-    vector_distance_search
+    vector_distance_search,
+    search_paragraph_contents
 )
 
 
@@ -86,4 +87,10 @@ def get_linked_paragraphs():
     
 @app.post('/keyword_search')
 def keyword_search():
-    raise NotImplementedError
+    body = request.json
+    if 'query' not in body:
+        return "theres no query", 400
+    
+    rs = search_paragraph_contents(body['query'])
+    
+    return jsonify(rs)
