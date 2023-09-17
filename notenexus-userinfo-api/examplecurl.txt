@@ -23,7 +23,7 @@ curl -X POST \
 	"author": "abc"
 }'
 
-> get notes by id
+> get note by id
 curl -X GET http://localhost:8080/notes/abc
 
 > delete note

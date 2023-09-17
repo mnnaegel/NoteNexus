@@ -1,9 +1,13 @@
 @import "./breakpoints.scss";
 @import "./variables.scss";
 .Home {
-  height: calc(100vh - 47px); // change
-
-  background-image: url("../assets/temporaryBackground.png");
+  background: radial-gradient(
+    120% 100% at 50% 10%,
+    transparent 37%,
+    $secondary 60%,
+    $primary 100%
+  );
+  height: calc(100vh - 53px); // change
   &__container {
     margin: 0 auto;
     padding-top: 3rem;
@@ -19,7 +23,8 @@
 
   &__right {
     padding: 2rem 1rem 3rem 3rem;
-    background-color: rgba(174, 246, 199, 70%); // $celadon + opacity
+    background-color: rgba(155, 198, 188, 50%);
+    background-repeat: repeat-y;
     backdrop-filter: blur(1px);
     margin-top: 30px;
     @include breakpoint(desktopSmall) {
@@ -45,5 +50,10 @@
     justify-content: center;
     align-items: center;
     margin: auto 0;
+  }
+
+  &:after {
+    background-color: red;
+    height: 100%;
   }
 }
