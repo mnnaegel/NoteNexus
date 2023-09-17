@@ -1,8 +1,9 @@
 import { Note } from "@/types/note.type";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { gsap, Power3 } from "gsap";
 import styles from "./NoteEditor.module.scss";
 import {
   TextareaAutosize,
@@ -11,6 +12,7 @@ import {
   breadcrumbsClasses,
 } from "@mui/material";
 import NavigationBar from "@/components/Navigation/Navigation";
+import SideBar from "@/components/SideBar/SideBar";
 
 interface Paragraph {
   key: string;
@@ -30,6 +32,7 @@ interface UpdateParagraphRequest {
 export default function Page() {
   const router = useRouter();
 
+  const containerRef = useRef(null);
   const note_id = router.query.id as string;
   const [note, setNote] = useState<Partial<Note>>();
   // State listing deleted nodes
@@ -241,15 +244,21 @@ export default function Page() {
     // There has been a change to a specific field
   };
 
+  function shrink() {
+    gsap.timeline()
+      .to(containerRef.current, {left: "10%", width: "50%", duration: 1, ease: Power3.easeInOut})
+  }
+
   return (
     <div className={styles.NoteEditor}>
+      <SideBar noteId={note_id}/>
       <NavigationBar />
-      <Container>
-        <h1>Note Title: {note?.title}</h1>
+      <Container >
+        <h1>Now Editing: {note?.title}</h1>
         <button onClick={updateNote}>Save</button>
+        <button onClick={shrink}>Shrink</button>
         <form>
-          <Grid></Grid>
-
+        <Grid ref={containerRef} className={styles.grid}>
           {editorContent.map((el, index) => (
             <Grid item xs={12}>
               <TextareaAutosize
@@ -282,6 +291,8 @@ export default function Page() {
               />
             </Grid>
           ))}
+
+        </Grid>
         </form>
       </Container>
     </div>

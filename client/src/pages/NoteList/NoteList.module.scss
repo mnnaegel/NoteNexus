@@ -11,14 +11,14 @@
   background: radial-gradient(
     120% 100% at 50% 10%,
     transparent 37%,
-    $celadon 60%,
-    $dartmouth-green 100%
+    $secondary 60%,
+    $primary 100%
   );
 
   // background: radial-gradient(
   //   140% 107.13% at 50% 30%,
   //   transparent 37.41%,
-  //   $celadon 49.27%,
+  //   $primary 49.27%,
   //   #fff 100%
   // );
   &__create {
@@ -39,20 +39,21 @@
       height: 100%;
       padding: 1em;
       border-radius: 1em;
-      color: $black-olive;
+      color: $black;
     }
 
     &__submit {
+      cursor: pointer;
       position: absolute;
       height: 100%;
       right: 0;
       border-radius: 0 1em 1em 0;
-      color: $black-olive;
-      background-color: $celadon;
+      color: $black;
+      background-color: $primary;
 
       transition: 300ms;
       &:hover {
-        background-color: $white;
+        background-color: $secondary;
       }
     }
   }
