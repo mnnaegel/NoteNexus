@@ -17,6 +17,7 @@ import SideBar from "@/components/SideBar/SideBar";
 import NavigationBar from "@/components/Header/Header";
 import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import LinkModal from "@/components/LinkModal/LinkModal";
 
 interface Paragraph {
   key: string;
@@ -40,6 +41,7 @@ export default function Page() {
   const [alertOpen, setAlertOpen] = useState(false);
   // Editor View?
   const [editorView, setEditorView] = useState(true);
+  const [modalData, setModalData] = useState(null);
 
   const containerRef = useRef(null);
   const note_id = router.query.id as string;
@@ -86,7 +88,7 @@ export default function Page() {
           console.log(error);
         });
     }
-  }, []);
+  }, [note_id]);
 
   // Reorders paragraph received from API to match sequence
   function reOrderParagaphs(raw_array: Partial<Paragraph>[]) {
@@ -257,11 +259,12 @@ export default function Page() {
       axios
         .post(`http://127.0.0.1:5000/get_similarity_links`, 
         {
-          "include_summary":"",
+          "include_summary":"yes",
           "para_id": paraId ,
           "threshold": threshold
         })
         .then((response) => {
+          setModalData(response.data)
           console.log(response.data);
         })
         .catch((error) => {
@@ -328,6 +331,7 @@ export default function Page() {
         linkView={linkView}
         editorView={() => {setEditorView(true); grow()}}
       />
+      <LinkModal open={!editorView} data={modalData}/>
       <NavigationBar />
       <Collapse in={alertOpen}>
         <Alert

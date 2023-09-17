@@ -132,7 +132,9 @@ def get_similarity_links():
     }
     
     if 'include_summary' in body and body['include_summary']:
+        print("test summarization 1")
         if len(combined_contents) > 250:
+            print("test summarization 2")
             summary = summarize_documents(combined_contents)
         else:
             summary = None

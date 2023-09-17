@@ -1,0 +1,28 @@
+@import "../../styles/variables.scss";
+
+.LinkModal {
+    position: absolute;
+    top: 15vh;
+    height: 70vh;
+    right: 0;
+    width: 25vw;
+    background-color: $white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 15px;
+    padding: 1rem;
+    text-align: center;
+
+    .externallink {
+        padding: 0.5rem;
+        border-radius: 5px;
+        margin-bottom: 0.5rem;
+        text-overflow: hidden;
+        max-width: 400px;
+        white-space: nowrap;
+        overflow: hidden;
+        max-height: 50px;
+        cursor: pointer;
+        border-color: $black;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 2px;
+    }
+}
