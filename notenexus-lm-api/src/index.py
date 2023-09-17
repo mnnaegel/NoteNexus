@@ -30,13 +30,10 @@ def hello_world():
 def edit_paragraphs():
     body = request.json
     
-    
     if 'delete' in body and body['delete']:
         #delete logic
         delete_paragraphs_by_id(body['delete'])
         
-        
-    
     if 'update' in body and body['update']:
         #update logic
         paragraphs_to_update = []
@@ -60,7 +57,6 @@ def edit_paragraphs():
 @app.get("/get_paragraphs/<note_id>")
 def get_paragraphs(note_id):
     paragraphs = get_paragraphs_by_noteid(note_id)
-    
     return jsonify(paragraphs)
 
 # Used for writing new paragraphs, and update or deleting existing paragraphs
@@ -88,3 +84,6 @@ def get_linked_paragraphs():
         result['summary'] = summary
     return jsonify(result)
     
+@app.post('/keyword_search')
+def keyword_search():
+    raise NotImplementedError
