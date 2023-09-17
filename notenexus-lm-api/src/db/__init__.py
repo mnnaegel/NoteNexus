@@ -61,6 +61,15 @@ def get_paragraphs_by_noteids(note_ids : list[str]):
     
     return rs
 
+def delete_note_paragraphs(note_id : str):
+    q = {
+        "term": {
+            "note_id" : note_id
+        }
+    }
+    
+    res = es.delete_by_query(index=PARAGRAPH_INDEX,query=q)
+
 def get_paragraph_neighbors(paragraph : dict, note_ids : list[str], k_neighbors : int = 5, exclude_own_note : bool = True):
     if not paragraph:
         return None
