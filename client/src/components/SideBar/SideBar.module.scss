@@ -1,0 +1,33 @@
+@import "../../styles/variables.scss";
+
+.SideBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    gap: 1.5rem;
+    top:25vh;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    left: 0;
+    height: 50vh;
+    width: 4.5vw;
+    background-color: $primary;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    .icon {
+        width: 3rem;
+        height: 3rem;
+        border-width: 1px;
+        border-color: $black;
+        background-color: $white;
+        color: $primary;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+    .icon:hover {
+        background-color: $secondary-dark;
+        color: $white;
+    }
+
+}

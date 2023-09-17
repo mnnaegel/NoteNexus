@@ -12,13 +12,13 @@
   background-color: $white;
   border-radius: 0.8rem;
   cursor: pointer;
-  border: 1px solid $viridian;
+  border: 1px solid $primary;
   box-shadow: #a4a4a4 0px 2px 3px 0px;
 
   &:hover {
-    border: 1px solid $celadon;
+    border: 1px solid $secondary-dark;
     .NoteCard__top {
-      border-bottom: 1px solid $celadon;
+      border-bottom: 1px solid $secondary-dark;
     }
   }
 
@@ -29,7 +29,7 @@
     padding: 16px 8px 14px 16px;
     font-size: 24px;
     font-weight: 700;
-    border-bottom: 1px solid $viridian;
+    border-bottom: 1px solid $primary;
   }
 
   &__body {
@@ -98,8 +98,8 @@
       display: flex;
       padding: 0.5em 1em;
       border-radius: 1em;
-      color: $black-olive;
-      background-color: $celadon;
+      color: $black;
+      background-color: $primary;
       transition: 300ms;
       cursor: pointer;
 

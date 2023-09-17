@@ -2,6 +2,7 @@
 @import "../../styles/breakpoints.scss";
 
 .NoteList {
+  padding-right: 16px; // offset mui
   padding-top: 20px;
   height: calc(100vh - 47px);
   display: flex;
@@ -12,19 +13,20 @@
   background: radial-gradient(
     120% 100% at 50% 10%,
     transparent 37%,
-    $celadon 60%,
-    $dartmouth-green 100%
+    $secondary 60%,
+    $primary 100%
   );
 
   &__top {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    padding-left: 16px; // offset mui
     gap: 1em;
   }
   &__filter {
     display: flex;
-    padding-left: 16px;
+
     &__wrapper {
       width: 300px;
       margin: 0 auto;
@@ -46,8 +48,9 @@
       height: 100%;
       right: 0;
       border-radius: 0 1em 1em 0;
-      color: $black-olive;
-      background-color: $celadon;
+      color: $black;
+      background-color: $primary;
+      cursor: pointer;
 
       transition: 300ms;
       &:hover {
@@ -71,27 +74,28 @@
       height: 100%;
       padding: 1em;
       border-radius: 1em;
-      color: $black-olive;
+      color: $black;
 
       &__errors {
         position: absolute; // change later
-        top: 47px;
+        top: 55px;
         color: red;
         font-size: 14px;
       }
     }
 
     &__submit {
+      cursor: pointer;
       position: absolute;
       height: 100%;
       right: 0;
       border-radius: 0 1em 1em 0;
-      color: $black-olive;
-      background-color: $celadon;
+      color: $black;
+      background-color: $primary;
 
       transition: 300ms;
       &:hover {
-        background-color: $white;
+        background-color: $secondary;
       }
     }
   }
