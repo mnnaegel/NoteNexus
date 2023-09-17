@@ -13,14 +13,13 @@ function Header({ isNotLoggedIn }: IHeaderProps) {
     : [
         { name: "Notes", href: "/notes" },
         { name: "LinkView", href: "/links" },
-        { name: "Editor", href: "/NoteEditor" },
       ];
 
   return (
     <div className={styles.Header}>
       <div className={styles.Header__navigationBar}>
         {allowedPages.map((page) => {
-          const isActive = pathname.startsWith(page.href);
+          const isActive = pathname?.startsWith(page.href);
           return (
             <Link
               className={

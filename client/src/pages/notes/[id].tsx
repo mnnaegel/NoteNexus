@@ -9,10 +9,13 @@ import {
   TextareaAutosize,
   Grid,
   Container,
-  breadcrumbsClasses,
+  Alert,
+  IconButton,
+  Collapse,
 } from "@mui/material";
 import SideBar from "@/components/SideBar/SideBar";
 import NavigationBar from "@/components/Header/Header";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Paragraph {
   key: string;
@@ -31,6 +34,11 @@ interface UpdateParagraphRequest {
 
 export default function Page() {
   const router = useRouter();
+
+  // Alert State
+  const [alertOpen, setAlertOpen] = useState(false);
+
+
 
   const containerRef = useRef(null);
   const note_id = router.query.id as string;
@@ -134,6 +142,7 @@ export default function Page() {
     axios
       .post("http://127.0.0.1:5000/edit_paragraphs", postData)
       .then((response) => {
+        setAlertOpen(true)
         console.log(response);
         // Resets all to false
         let editorCont: Paragraph[] = editorContent.map((el) => {
@@ -251,12 +260,31 @@ export default function Page() {
 
   return (
     <div className={styles.NoteEditor}>
-      <SideBar noteId={note_id}/>
+      <SideBar noteId={note_id} saveClick={updateNote}/>
       <NavigationBar />
-      <Container >
+      <Collapse in={alertOpen}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setAlertOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+         Request sent successfully! 
+        </Alert>
+      </Collapse>
+      <Container className={styles.container}>
+        <div className={styles.title}>
         <h1>Now Editing: {note?.title}</h1>
-        <button onClick={updateNote}>Save</button>
-        <button onClick={shrink}>Shrink</button>
+        </div>
         <form>
         <Grid ref={containerRef} className={styles.grid}>
           {editorContent.map((el, index) => (
