@@ -1,4 +1,4 @@
-import NavigationBar from "@/components/Navigation/Navigation";
+import NavigationBar from "@/components/Header/Header";
 import classnames from "classnames";
 import { Container, Grid, TextareaAutosize } from "@mui/material";
 import { useEffect, useRef, useState } from "react";

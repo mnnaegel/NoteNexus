@@ -1,0 +1,27 @@
+@import "../../styles/variables.scss";
+
+.Header {
+  &__navigationBar {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 20px; // change later
+    margin: 0 auto;
+    padding: 10px 0;
+    border-bottom: 1px solid $viridian;
+
+    &__item {
+      color: $black-olive;
+      transition: 300ms;
+      &:hover {
+        font-weight: 700;
+        color: $brunswick-green;
+      }
+
+      &--active {
+        font-weight: 700;
+        color: $brunswick-green;
+      }
+    }
+  }
+}

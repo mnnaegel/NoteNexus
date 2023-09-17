@@ -1,11 +1,19 @@
-import NavigationBar from "@/components/Navigation/Navigation";
+import NavigationBar from "@/components/Header/Header";
 import { SignIn, SignOutButton, UserButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import styles from "../styles/Home.module.scss";
+import { useEffect } from "react";
+import router from "next/router";
+import { CircularProgress } from "@mui/material";
 
 export default function Home() {
   const { isSignedIn, user, isLoaded } = useUser();
-  console.log(user);
+  useEffect(() => {
+    console.log("IN USE EFFECT user: ", user);
+    if (user) {
+      router.push("/notes"); // Redirect to /notes if authenticated
+    }
+  }, [user]);
 
   return !user ? (
     <>
@@ -27,9 +35,12 @@ export default function Home() {
   ) : (
     <div>
       <NavigationBar />
-        YOU ARE SIGNED IN
+      <div className={styles.Home__auth}>
+        <CircularProgress />
+        You have signed in.
+        <UserButton />
         <SignOutButton />
-      <UserButton />
+      </div>
     </div>
   );
 }

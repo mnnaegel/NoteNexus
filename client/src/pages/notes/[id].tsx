@@ -4,8 +4,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import styles from "./NoteEditor.module.scss";
-import { TextareaAutosize, Grid, Container } from "@mui/material";
-import NavigationBar from "@/components/Navigation/Navigation";
+import {
+  TextareaAutosize,
+  Grid,
+  Container,
+  breadcrumbsClasses,
+} from "@mui/material";
+import NavigationBar from "@/components/Header/Header";
 
 interface Paragraph {
   key: string;
@@ -27,9 +32,10 @@ export default function Page() {
 
   const note_id = router.query.id as string;
   const [note, setNote] = useState<Partial<Note>>();
+  // State listing deleted nodes
+  const [deleted, setDeleted] = useState<string[]>([]);
   const initial_id = uuid();
   const [focusIdx, setFocusIdx] = useState(0);
-  const [rawParagraphs, setRawParagraphs] = useState<Partial<Paragraph>[]>([]);
   // Starting Editor (Overwritten if note is non-empty)
   const [editorContent, setEditorContent] = useState<Paragraph[]>([
     {
@@ -58,12 +64,11 @@ export default function Page() {
       axios
         .get(`http://127.0.0.1:5000/get_paragraphs/${note_id}`)
         .then((response) => {
+          console.log(response.data);
           let editorCont: Partial<Paragraph>[] = response.data;
           if (editorCont.length > 0) {
-          setEditorContent(reOrderParagaphs(editorCont));
-
+            setEditorContent(reOrderParagaphs(editorCont));
           }
-          console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -71,6 +76,7 @@ export default function Page() {
     }
   }, []);
 
+  // Reorders paragraph received from API to match sequence
   function reOrderParagaphs(raw_array: Partial<Paragraph>[]) {
     let head: string = "";
     let orderDict: { [key: string]: Partial<Paragraph> } = {};
@@ -78,25 +84,24 @@ export default function Page() {
     // Find head and create Dict
     for (let i = 0; i < raw_array.length; ++i) {
       if (raw_array[i].previous == "") {
-          head = raw_array[i].id as string;
+        head = raw_array[i].id as string;
       }
       orderDict[raw_array[i].id as string] = raw_array[i];
     }
 
     // Establish order
     while (head !== "") {
-      let raw_el: Partial<Paragraph> = orderDict[head]
+      let raw_el: Partial<Paragraph> = orderDict[head];
       let processed_el: Paragraph = {
         id: raw_el.id as string,
         key: raw_el.id as string,
         contents: raw_el.contents as string,
         previous: raw_el.previous as string,
         next: raw_el.next as string,
-        updated: false
-      }
+        updated: false,
+      };
       head = raw_el.next as string;
-      output_arr.push(processed_el)
-
+      output_arr.push(processed_el);
     }
     return output_arr;
   }
@@ -118,14 +123,28 @@ export default function Page() {
 
     const postData: UpdateParagraphRequest = {
       update: updated,
-      delete: [],
+      delete: deleted,
     };
 
+    console.log("Post Data:");
     console.log(postData);
     axios
       .post("http://127.0.0.1:5000/edit_paragraphs", postData)
       .then((response) => {
         console.log(response);
+        // Resets all to false
+        let editorCont: Paragraph[] = editorContent.map((el) => {
+          return {
+            id: el.id as string,
+            key: el.key as string,
+            contents: el.contents as string,
+            previous: el.previous as string,
+            next: el.next as string,
+            updated: false,
+          };
+        });
+        setEditorContent(editorCont);
+        setDeleted([])
       })
       .catch((error) => {
         console.error(error);
@@ -171,6 +190,53 @@ export default function Page() {
       }
       setEditorContent(new_arr);
       console.log("enter press here! ");
+    }
+    // Empty Case
+    else if (event.key === "Backspace" && event.target.value === "") {
+      const id = event.target.id;
+      setDeleted([...(deleted as string[]), id])
+      // Edge Case: Head is deleted or is only element
+      if (editorContent.length === 1) {
+        return;
+      } else if (editorContent[0].id === id) {
+        let editorCont: Paragraph[] = [];
+        let headpara: Paragraph = editorContent.slice(1)[0];
+        headpara.previous = "";
+        headpara.updated = true;
+        editorCont = [
+          headpara,
+          ...editorContent.slice(2, editorContent.length),
+        ];
+        console.log(editorCont)
+        setEditorContent(editorCont);
+      } 
+      else {
+        let editorCont: Paragraph[] = [];
+        for (let i = 0; i < editorContent.length; ++i) {
+          if (editorContent[i].next === id) {
+            let newNext = editorContent[i+1].next
+            let prevEl: Paragraph = editorContent.slice(i)[0]
+            prevEl.next = newNext;
+            prevEl.updated = true;
+            editorCont.push(prevEl);
+          }
+          else if (editorContent[i].id === id) {
+            // Do nothing
+          }
+          else if (editorContent[i].previous === id) {
+            let newPrev = editorContent[i-1].previous
+            let nextEl: Paragraph = editorContent.slice(i)[0];
+            nextEl.previous = newPrev;
+            nextEl.updated = true;
+            editorCont.push(nextEl);
+          }
+          else {
+            editorCont.push(editorContent.slice(i)[0])
+          }
+        }
+        setEditorContent(editorCont);
+      }
+      console.log("backspace pressed!");
     }
     // There has been a change to a specific field
   };
