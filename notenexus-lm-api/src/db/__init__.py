@@ -65,6 +65,25 @@ def get_paragraphs_by_noteid(note_id : str):
     
     return rs
 
+def search_paragraph_contents(query_string: str):
+    q = {
+        "simple_query_string": {
+            "fields": [ "contents" ],
+            "query": query_string
+        }
+    }
+    
+    res = es.search(index=PARAGRAPH_INDEX, query=q)
+    print("Got %d Hits:" % res['hits']['total']['value'])
+    
+    rs = []
+    for hit in res['hits']['hits']:
+        doc = hit['_source']
+        del doc['embedding']
+        rs.append(doc)
+    
+    return rs
+
 def vector_similarity_search(query_vector : list[float], threshold : float):
     q = {
         "script_score": {
