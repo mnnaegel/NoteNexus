@@ -45,18 +45,14 @@ def update_paragraphs(paragraphs : list[Paragraph]):
     #Write the updated paragraphs
     write_paragraphs(paragraphs)
 
-def get_paragraphs_by_noteid(note_id : str):
+def get_paragraphs_by_noteids(note_ids : list[str]):
     q = {
-        "term" : {
-            "note_id": {
-                "value" : note_id
-            }
+        "terms" : {
+            "note_id": note_ids
         }
     }
     
     res = es.search(index=PARAGRAPH_INDEX, query=q)
-    print("Got %d Hits:" % res['hits']['total']['value'])
-    
     rs = []
     for hit in res['hits']['hits']:
         doc = hit['_source']
@@ -64,6 +60,66 @@ def get_paragraphs_by_noteid(note_id : str):
         rs.append(doc)
     
     return rs
+
+def get_paragraph_neighbors(para_id : str, note_ids : list[str], k_neighbors : int = 5, exclude_own_note : bool = True):
+    paragraph = get_paragraph_by_paraid(para_id)
+    if not paragraph:
+        return None
+
+    q = {
+        "field": "embedding",
+        "query_vector": paragraph['embedding'],
+        "k": k_neighbors,
+        "num_candidates": 20
+    }
+    
+    if exclude_own_note:
+        q['filter'] = {
+            "bool": {
+                "must": [
+                    {
+                        "terms":{
+                            "note_id" : note_ids
+                        }
+                    }  
+                ],
+                "must_not": [
+                    {
+                        "term": {
+                            "note_id": paragraph['note_id']
+                        }
+                    }
+                ]
+            }
+        }
+    
+    
+    res = es.search(index=PARAGRAPH_INDEX, knn=q)
+    
+    rs = []
+    for hit in res['hits']['hits']:
+        doc = hit['_source']
+        del doc['embedding']
+        rs.append(doc)
+    
+    
+    links = []
+    for doc in rs:
+        links.append({
+            "source": paragraph['id'],
+            "target": doc['id']
+        })
+    return links
+    
+
+def get_paragraph_by_paraid(para_id : str):
+    resp = es.get(index=PARAGRAPH_INDEX, id=para_id)
+    
+    if '_source' in resp:
+        return resp['_source']
+    return None
+    
+    
 
 def search_paragraph_contents(query_string: str):
     q = {
@@ -74,7 +130,6 @@ def search_paragraph_contents(query_string: str):
     }
     
     res = es.search(index=PARAGRAPH_INDEX, query=q)
-    print("Got %d Hits:" % res['hits']['total']['value'])
     
     rs = []
     for hit in res['hits']['hits']:
