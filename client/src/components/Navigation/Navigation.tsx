@@ -9,23 +9,25 @@ interface INavigationBarProps {
   isNotLoggedIn?: boolean;
 }
 function NavigationBar({ isNotLoggedIn }: INavigationBarProps) {
-  const pages = [
-    { name: "Home", href: "/" },
-    { name: "Notes", href: "/NoteList" },
-    { name: "LinkView", href: "/LinkView" },
+  const unauthenticatedPages = [{ name: "Home", href: "/" }];
+  const authenticatedPages = [
+    { name: "Notes", href: "/notes" },
+    { name: "LinkView", href: "/links" },
     { name: "Editor", href: "/NoteEditor" },
   ];
   return isNotLoggedIn ? (
     <div className={styles.NavigationBar}>
-      <Link href={"/"} key={"Home"}>
-        Home
-      </Link>
+      {unauthenticatedPages.map((page) => (
+        <Link href={page.href} key={page.name}>
+          {page.name}
+        </Link>
+      ))}
     </div>
   ) : (
     <div className={styles.NavigationBar}>
-      {pages.map((el) => (
-        <Link href={el.href} key={el.name}>
-          {el.name}
+      {authenticatedPages.map((page) => (
+        <Link href={page.href} key={page.name}>
+          {page.name}
         </Link>
       ))}
     </div>

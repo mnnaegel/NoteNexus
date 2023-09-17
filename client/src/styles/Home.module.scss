@@ -1,7 +1,8 @@
 @import "./breakpoints.scss";
 @import "./variables.scss";
 .Home {
-  height: 100vh; // change
+  height: calc(100vh - 87px); // change
+
   background-image: url("../assets/temporaryBackground.png");
   &__container {
     margin: 0 auto;
@@ -27,5 +28,22 @@
     &__title {
       color: black;
     }
+  }
+
+  &__auth {
+    height: calc(100vh - 87px);
+    background: radial-gradient(
+      120% 100% at 50% 10%,
+      transparent 37%,
+      $celadon 60%,
+      $dartmouth-green 100%
+    );
+    font-size: 3em;
+    gap: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto 0;
   }
 }

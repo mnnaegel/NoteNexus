@@ -2,7 +2,6 @@ import json, os
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from lm import encode_text
 from db.model import Paragraph
 from db import (
     get_paragraphs_by_noteid,
@@ -10,6 +9,12 @@ from db import (
     update_paragraphs,
     vector_similarity_search,
     vector_distance_search
+)
+
+
+from lm import (
+    encode_text,
+    summarize_documents
 )
 
 load_dotenv()
@@ -69,6 +74,17 @@ def get_linked_paragraphs():
     query_vector = encode_text(body['text_query'])
     threshold = 0.5 if 'threshold' not in body else float(body['threshold'])
     rs = vector_similarity_search(query_vector,threshold)
+    combined_contents = "\n".join([result['contents'] for result in rs])
+                             
+    result = {
+        "paragraphs": rs
+    }
     
-    return jsonify(rs)
+    if 'include_summary' in body and body['include_summary']:
+        if len(combined_contents) > 250:
+            summary = summarize_documents(combined_contents)
+        else:
+            summary = None
+        result['summary'] = summary
+    return jsonify(result)
     
