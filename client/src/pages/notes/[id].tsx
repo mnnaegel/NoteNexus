@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 import SideBar from "@/components/SideBar/SideBar";
 import NavigationBar from "@/components/Header/Header";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 interface Paragraph {
   key: string;
@@ -37,8 +38,8 @@ export default function Page() {
 
   // Alert State
   const [alertOpen, setAlertOpen] = useState(false);
-
-
+  // Editor View?
+  const [editorView, setEditorView] = useState(true);
 
   const containerRef = useRef(null);
   const note_id = router.query.id as string;
@@ -142,7 +143,7 @@ export default function Page() {
     axios
       .post("http://127.0.0.1:5000/edit_paragraphs", postData)
       .then((response) => {
-        setAlertOpen(true)
+        setAlertOpen(true);
         console.log(response);
         // Resets all to false
         let editorCont: Paragraph[] = editorContent.map((el) => {
@@ -156,7 +157,7 @@ export default function Page() {
           };
         });
         setEditorContent(editorCont);
-        setDeleted([])
+        setDeleted([]);
       })
       .catch((error) => {
         console.error(error);
@@ -205,8 +206,9 @@ export default function Page() {
     }
     // Empty Case
     else if (event.key === "Backspace" && event.target.value === "") {
+      event.preventDefault();
       const id = event.target.id;
-      setDeleted([...(deleted as string[]), id])
+      setDeleted([...(deleted as string[]), id]);
       // Edge Case: Head is deleted or is only element
       if (editorContent.length === 1) {
         return;
@@ -219,31 +221,29 @@ export default function Page() {
           headpara,
           ...editorContent.slice(2, editorContent.length),
         ];
-        console.log(editorCont)
+        console.log(editorCont);
         setEditorContent(editorCont);
-      } 
-      else {
+        setFocusIdx(0);
+      } else {
         let editorCont: Paragraph[] = [];
         for (let i = 0; i < editorContent.length; ++i) {
           if (editorContent[i].next === id) {
-            let newNext = editorContent[i+1].next
-            let prevEl: Paragraph = editorContent.slice(i)[0]
+            setFocusIdx(i);
+            let newNext = editorContent[i + 1].next;
+            let prevEl: Paragraph = editorContent.slice(i)[0];
             prevEl.next = newNext;
             prevEl.updated = true;
             editorCont.push(prevEl);
-          }
-          else if (editorContent[i].id === id) {
+          } else if (editorContent[i].id === id) {
             // Do nothing
-          }
-          else if (editorContent[i].previous === id) {
-            let newPrev = editorContent[i-1].previous
+          } else if (editorContent[i].previous === id) {
+            let newPrev = editorContent[i - 1].previous;
             let nextEl: Paragraph = editorContent.slice(i)[0];
             nextEl.previous = newPrev;
             nextEl.updated = true;
             editorCont.push(nextEl);
-          }
-          else {
-            editorCont.push(editorContent.slice(i)[0])
+          } else {
+            editorCont.push(editorContent.slice(i)[0]);
           }
         }
         setEditorContent(editorCont);
@@ -253,14 +253,81 @@ export default function Page() {
     // There has been a change to a specific field
   };
 
+  function linkRequest(paraId: string, threshold: string) {
+      axios
+        .post(`http://127.0.0.1:5000/get_similarity_links`, 
+        {
+          "include_summary":"",
+          "para_id": paraId ,
+          "threshold": threshold
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+  }
+
+  function linkView() {
+    setEditorView(false);
+    shrink();
+  }
+  function grow() {
+    gsap.timeline().to(containerRef.current, {
+      width: "100%",
+      duration: 1,
+      ease: Power3.easeInOut,
+    });
+
+  }
   function shrink() {
-    gsap.timeline()
-      .to(containerRef.current, {left: "10%", width: "50%", duration: 1, ease: Power3.easeInOut})
+    gsap.timeline().to(containerRef.current, {
+      width: "75%",
+      duration: 1,
+      ease: Power3.easeInOut,
+    });
+  }
+
+  function createParagraph(para: Paragraph) {
+    let contents: string[] = para.contents.split(" ");
+    if (contents.length > 1 && contents[0] === "#") {
+      return (
+        <div className={styles.viewerpara}>
+          <h1>{para.contents}</h1>
+        </div>
+      );
+    } else if (contents.length > 1 && contents[0] === "##") {
+      return (
+        <div className={styles.viewerpara}>
+          <h2>{para.contents}</h2>
+        </div>
+      );
+    } else if (contents.length > 1 && contents[0] === "###") {
+      return (
+        <div className={styles.viewerpara}>
+          <h3>{para.contents}</h3>
+        </div>
+      );
+    }
+    return (
+      <div id={para.id} className={styles.viewerpara}>
+        <p>{para.contents}</p>
+        <IconButton className={styles.manuallink} onClick={() => linkRequest(para.id, "0.55")}>
+          <OpenInNewIcon />
+        </IconButton>
+      </div>
+    );
   }
 
   return (
     <div className={styles.NoteEditor}>
-      <SideBar noteId={note_id} saveClick={updateNote}/>
+      <SideBar
+        noteId={note_id}
+        saveClick={updateNote}
+        linkView={linkView}
+        editorView={() => {setEditorView(true); grow()}}
+      />
       <NavigationBar />
       <Collapse in={alertOpen}>
         <Alert
@@ -278,49 +345,60 @@ export default function Page() {
           }
           sx={{ mb: 2 }}
         >
-         Request sent successfully! 
+          Request sent successfully!
         </Alert>
       </Collapse>
       <Container className={styles.container}>
         <div className={styles.title}>
-        <h1>Now Editing: {note?.title}</h1>
+          <h1>Now {editorView?"Editing":"Viewing"}: {note?.title}</h1>
         </div>
         <form>
-        <Grid ref={containerRef} className={styles.grid}>
-          {editorContent.map((el, index) => (
-            <Grid item xs={12}>
-              <TextareaAutosize
-                className={styles.paragraph}
-                ref={(element: any) =>
-                  element && index == focusIdx && element.focus()
-                }
-                id={el.id}
-                key={el.key}
-                value={el.contents}
-                onChange={(e) => {
-                  setFocusIdx(index);
-                  let editorCont = editorContent.map((editor, index) => {
-                    if (editor.id !== el.id) {
-                      return editor;
-                    } else {
-                      return {
-                        key: el.key,
-                        contents: e.target.value,
-                        id: el.id,
-                        previous: el.previous,
-                        next: el.next,
-                        updated: true,
-                      };
+          <Grid container ref={containerRef} className={styles.grid}>
+            {/* View Mode */}
+            {!editorView && (
+              <Grid item container spacing={1} xs={12}>
+                <Grid item xs={12}>
+                  {editorContent.map((el) => {
+                    return createParagraph(el);
+                  })}
+                </Grid>
+              </Grid>
+            )}
+            {/* Editor View */}
+            {editorView &&
+              editorContent.map((el, index) => (
+                <Grid item xs={12}>
+                  <TextareaAutosize
+                    className={styles.paragraph}
+                    ref={(element: any) =>
+                      element && index == focusIdx && element.focus()
                     }
-                  });
-                  setEditorContent(editorCont);
-                }}
-                onKeyDown={handleKeyPress}
-              />
-            </Grid>
-          ))}
-
-        </Grid>
+                    id={el.id}
+                    key={el.key}
+                    value={el.contents}
+                    onChange={(e) => {
+                      setFocusIdx(index);
+                      let editorCont = editorContent.map((editor, index) => {
+                        if (editor.id !== el.id) {
+                          return editor;
+                        } else {
+                          return {
+                            key: el.key,
+                            contents: e.target.value,
+                            id: el.id,
+                            previous: el.previous,
+                            next: el.next,
+                            updated: true,
+                          };
+                        }
+                      });
+                      setEditorContent(editorCont);
+                    }}
+                    onKeyDown={handleKeyPress}
+                  />
+                </Grid>
+              ))}
+          </Grid>
         </form>
       </Container>
     </div>

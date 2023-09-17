@@ -61,8 +61,16 @@ def get_paragraphs_by_noteids(note_ids : list[str]):
     
     return rs
 
-def get_paragraph_neighbors(para_id : str, note_ids : list[str], k_neighbors : int = 5, exclude_own_note : bool = True):
-    paragraph = get_paragraph_by_paraid(para_id)
+def delete_note_paragraphs(note_id : str):
+    q = {
+        "term": {
+            "note_id" : note_id
+        }
+    }
+    
+    res = es.delete_by_query(index=PARAGRAPH_INDEX,query=q)
+
+def get_paragraph_neighbors(paragraph : dict, note_ids : list[str], k_neighbors : int = 5, exclude_own_note : bool = True):
     if not paragraph:
         return None
 
@@ -139,11 +147,15 @@ def search_paragraph_contents(query_string: str):
     
     return rs
 
-def vector_similarity_search(query_vector : list[float], threshold : float):
+def vector_similarity_search(query_vector : list[float], threshold : float, ignore_notes : list[str]):
     q = {
         "script_score": {
             "query" : {
-                "match_all":{}
+                "bool":{
+                    "must_not":[
+                        { "terms": {"note_id": ignore_notes}}
+                    ]
+                }
             },
             "script": {
                 "source": """
@@ -170,11 +182,15 @@ def vector_similarity_search(query_vector : list[float], threshold : float):
     
     return rs
 
-def vector_distance_search(query_vector : list[float], threshold : float):
+def vector_distance_search(query_vector : list[float], threshold : float, ignore_notes : list[str]):
     q = {
         "script_score": {
             "query" : {
-                "match_all":{}
+                "bool":{
+                    "must_not":[
+                        { "terms": {"note_ids": ignore_notes}}
+                    ]
+                }
             },
             "script": {
                 "source": """
