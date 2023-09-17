@@ -11,9 +11,11 @@ import { useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
 import logo from "../../assets/temporaryLogo.png";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 function NoteList() {
   const { user } = useUser();
+  const { push } = useRouter();
   const {
     register,
     handleSubmit,
@@ -52,9 +54,8 @@ function NoteList() {
 
     axios(axiosConfig)
       .then((response) => {
-        console.log("Response:", response.data);
+        push("/notes/" + postData.id);
         setNotes([...(notes || []), postData as Partial<Note>]);
-        reset();
       })
       .catch((error) => {
         console.error("Error:", error);
