@@ -108,18 +108,19 @@ def get_knn_links():
 
 
 # Used for writing new paragraphs, and update or deleting existing paragraphs
-@app.post('/get_linked_paragraphs')
-def get_linked_paragraphs():
+@app.post('/get_similarity_links')
+def get_similarity_links():
     body = request.json
     
-    if 'text_query' not in body:
-        return "theres no text query", 400
+    if 'para_id' not in body:
+        return "theres no para_id", 400
     
-    query_vector = encode_text(body['text_query'])
+    paragraph = get_paragraph_by_paraid(body['para_id'])
     threshold = 0.5 if 'threshold' not in body else float(body['threshold'])
-    rs = vector_similarity_search(query_vector,threshold)
+    rs = vector_similarity_search(paragraph['embedding'],threshold)
+    
     combined_contents = "\n".join([result['contents'] for result in rs])
-                             
+                 
     result = {
         "paragraphs": rs
     }
