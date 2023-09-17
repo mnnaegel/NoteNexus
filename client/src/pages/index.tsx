@@ -1,4 +1,4 @@
-import NavigationBar from "@/components/Navigation/Navigation";
+import NavigationBar from "@/components/Header/Header";
 import { SignIn, SignOutButton, UserButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import styles from "../styles/Home.module.scss";

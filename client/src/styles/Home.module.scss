@@ -1,7 +1,7 @@
 @import "./breakpoints.scss";
 @import "./variables.scss";
 .Home {
-  height: calc(100vh - 87px); // change
+  height: calc(100vh - 47px); // change
 
   background-image: url("../assets/temporaryBackground.png");
   &__container {
@@ -31,7 +31,7 @@
   }
 
   &__auth {
-    height: calc(100vh - 87px);
+    height: calc(100vh - 47px);
     background: radial-gradient(
       120% 100% at 50% 10%,
       transparent 37%,

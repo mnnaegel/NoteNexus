@@ -39,3 +39,73 @@
     padding: 16px 8px 14px 16px;
   }
 }
+
+.Modal {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__wrapper {
+    width: 400px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 30px 42px;
+    gap: 16px;
+    background-color: white;
+  }
+
+  &__title {
+    font-size: 22px;
+  }
+  &__body {
+    font-size: 16px;
+  }
+
+  &__input {
+    border-radius: 1em;
+    padding: 1em;
+
+    &__errors {
+      color: red;
+      font-size: 14px;
+    }
+  }
+
+  &__buttons {
+    margin-top: auto;
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+
+    &__cancel {
+      display: flex;
+      padding: 0.5em 1em;
+      border-radius: 1em;
+      background-color: $white;
+      color: $viridian;
+      transition: 300ms;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgb(227, 227, 227);
+      }
+    }
+    &__submit {
+      display: flex;
+      padding: 0.5em 1em;
+      border-radius: 1em;
+      color: $black-olive;
+      background-color: $celadon;
+      transition: 300ms;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $white;
+      }
+    }
+  }
+}

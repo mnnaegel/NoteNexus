@@ -11,8 +11,8 @@ import {
   Container,
   breadcrumbsClasses,
 } from "@mui/material";
-import NavigationBar from "@/components/Navigation/Navigation";
 import SideBar from "@/components/SideBar/SideBar";
+import NavigationBar from "@/components/Header/Header";
 
 interface Paragraph {
   key: string;
