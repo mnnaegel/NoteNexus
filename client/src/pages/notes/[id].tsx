@@ -289,8 +289,8 @@ export default function Page() {
     }
     return (
       <div id={para.id} className={styles.viewerpara}>
-        <IconButton>
-
+        <IconButton className={styles.manuallink}>
+          <OpenInNewIcon/>
         </IconButton>
         {para.contents}
       </div>
