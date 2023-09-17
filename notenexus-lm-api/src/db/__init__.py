@@ -138,11 +138,15 @@ def search_paragraph_contents(query_string: str):
     
     return rs
 
-def vector_similarity_search(query_vector : list[float], threshold : float):
+def vector_similarity_search(query_vector : list[float], threshold : float, ignore_notes : list[str]):
     q = {
         "script_score": {
             "query" : {
-                "match_all":{}
+                "bool":{
+                    "must_not":[
+                        { "terms": {"note_ids": ignore_notes}}
+                    ]
+                }
             },
             "script": {
                 "source": """
@@ -169,11 +173,15 @@ def vector_similarity_search(query_vector : list[float], threshold : float):
     
     return rs
 
-def vector_distance_search(query_vector : list[float], threshold : float):
+def vector_distance_search(query_vector : list[float], threshold : float, ignore_notes : list[str]):
     q = {
         "script_score": {
             "query" : {
-                "match_all":{}
+                "bool":{
+                    "must_not":[
+                        { "terms": {"note_ids": ignore_notes}}
+                    ]
+                }
             },
             "script": {
                 "source": """
