@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import logo from "../../assets/temporaryLogo.png";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import SearchIcon from "@mui/icons-material/Search";
 
 function NoteList() {
   const { user } = useUser();
@@ -23,6 +24,8 @@ function NoteList() {
     formState: { errors },
   } = useForm();
   const [notes, setNotes] = useState<Array<Partial<Note>>>([]);
+  const [filter, setFilter] = useState<string>("");
+  const [filteredNotes, setFilteredNotes] = useState<Array<Partial<Note>>>([]);
 
   useEffect(() => {
     axios
@@ -54,8 +57,9 @@ function NoteList() {
 
     axios(axiosConfig)
       .then((response) => {
-        push("/notes/" + postData.id);
         setNotes([...(notes || []), postData as Partial<Note>]);
+        push("/notes/" + postData.id);
+        console.log("notes:", notes);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -100,33 +104,58 @@ function NoteList() {
         console.error("Error:", error);
       });
   };
-
+  const getFilteredNotes = (text: string) => {
+    // use brian's api to get the filtered notes
+    setFilteredNotes(notes);
+  };
+  useEffect(() => {
+    getFilteredNotes("");
+  }, []);
   return (
     <>
       <NavigationBar />
       <div className={styles.NoteList}>
-        <form
-          className={styles.NoteList__create}
-          onSubmit={handleSubmit(onCreateNote)}
-        >
-          <span className={styles.NoteList__create__input__errors}>
-            {errors.newNoteName && "Please name your note"}
-          </span>
-          <div className={styles.NoteList__create__wrapper}>
-            <input
-              className={styles.NoteList__create__input}
-              placeholder="Start a new note"
-              {...register("newNoteName", {
-                required: true,
-                maxLength: 30,
-              })}
-            />
-
-            <button className={styles.NoteList__create__submit} type="submit">
-              <AddIcon />
-            </button>
+        <div className={styles.NoteList__top}>
+          <div className={styles.NoteList__filter}>
+            <div className={styles.NoteList__filter__wrapper}>
+              <input
+                className={styles.NoteList__filter__input}
+                type="filter"
+                placeholder="Filter"
+                value={filter}
+                onChange={(e) => {
+                  return setFilter(e.target.value);
+                }}
+              />
+              <button className={styles.NoteList__filter__search}>
+                <SearchIcon />
+              </button>
+            </div>
           </div>
-        </form>
+
+          <form
+            className={styles.NoteList__create}
+            onSubmit={handleSubmit(onCreateNote)}
+          >
+            <span className={styles.NoteList__create__input__errors}>
+              {errors.newNoteName && "Please name your note"}
+            </span>
+            <div className={styles.NoteList__create__wrapper}>
+              <input
+                className={styles.NoteList__create__input}
+                placeholder="Start a new note"
+                {...register("newNoteName", {
+                  required: true,
+                  maxLength: 30,
+                })}
+              />
+
+              <button className={styles.NoteList__create__submit} type="submit">
+                <AddIcon />
+              </button>
+            </div>
+          </form>
+        </div>
         {notes && notes.length > 0 ? (
           <Grid
             container
@@ -148,7 +177,7 @@ function NoteList() {
         ) : (
           <div className={styles.NoteList__noNotes}>
             <p className={styles.NoteList__noNotes__header}>
-              Create a New Note!
+              No notes have been found!
             </p>
             <Image src={logo} alt="logo" height={160} width={160} />
           </div>
