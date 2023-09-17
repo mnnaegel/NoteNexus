@@ -14,7 +14,7 @@ sh start_api.sh
 # Endpoints
 
 ## GET Requests
-### get_paragraphs (Complete)
+### get_paragraphs
 
 Used to get paragraphs for a particular note.
 ```json
@@ -23,7 +23,7 @@ GET /get_paragraphs/{note_id}
 
 ## POST Requests
 
-### edit_paragraphs (Complete)
+### edit_paragraphs
 Used for creating new paragraphs, and updating or deleting existing paragraphs.
 ```json
 POST /edit_paragraphs
@@ -52,7 +52,7 @@ POST /edit_paragraphs
 }
 ```
 
-### get_linked_paragraphs (Todo)
+### get_linked_paragraphs
 Encode a query text into a vector and identify similar notes by their embedding
 ```json
 POST /get_linked_paragraphs
