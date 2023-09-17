@@ -13,10 +13,7 @@ function Header({ isNotLoggedIn }: IHeaderProps) {
   const pathname = usePathname();
   const allowedPages = isNotLoggedIn
     ? [{ name: "Home", href: "/" }]
-    : [
-        { name: "Notes", href: "/notes" },
-        { name: "LinkView", href: "/links" },
-      ];
+    : [{ name: "Notes", href: "/notes" }];
 
   return (
     <div className={styles.Header}>
