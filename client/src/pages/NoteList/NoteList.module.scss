@@ -2,6 +2,7 @@
 @import "../../styles/breakpoints.scss";
 
 .NoteList {
+  padding-top: 20px;
   height: calc(100vh - 87px);
   display: flex;
   flex-direction: column;
@@ -45,7 +46,7 @@
       &__errors {
         position: absolute; // change later
         right: 50%;
-        top: 62px;
+        top: 47px;
         color: red;
         font-size: 14px;
       }

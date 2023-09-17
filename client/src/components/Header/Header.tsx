@@ -19,7 +19,7 @@ function Header({ isNotLoggedIn }: IHeaderProps) {
       <div className={styles.Header__navigationBar}>
         {allowedPages.map((page) => (
           <Link
-            className={styles.NavigationBar__item}
+            className={styles.Header__navigationBar__item}
             href={page.href}
             key={page.name}
           >

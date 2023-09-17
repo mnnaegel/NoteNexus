@@ -6,12 +6,17 @@
     justify-content: center;
     gap: 30px;
     font-size: 20px; // change later
-    margin: 10px auto;
-    padding-bottom: 18px;
+    margin: 0 auto;
+    padding: 10px 0;
     border-bottom: 1px solid $viridian;
 
     &__item {
       color: $black-olive;
+      transition: 300ms;
+      &:hover {
+        font-weight: 600;
+        color: $brunswick-green;
+      }
     }
   }
 }
