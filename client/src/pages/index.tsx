@@ -7,9 +7,8 @@ import router from "next/router";
 import { CircularProgress } from "@mui/material";
 
 export default function Home() {
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { user } = useUser();
   useEffect(() => {
-    console.log("IN USE EFFECT user: ", user);
     if (user) {
       router.push("/notes"); // Redirect to /notes if authenticated
     }
