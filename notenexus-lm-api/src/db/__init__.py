@@ -72,7 +72,10 @@ def vector_similarity_search(query_vector : list[float], threshold : float):
                 "match_all":{}
             },
             "script": {
-                "source": "cosineSimilarity(params.query_vector, 'embedding')", 
+                "source": """
+                    double value = cosineSimilarity(params.query_vector, 'embedding');
+                    return sigmoid(1, Math.E, -value); 
+                """,
                 "params": {
                     "query_vector": query_vector
                 }

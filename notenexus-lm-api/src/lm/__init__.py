@@ -13,7 +13,8 @@ def summarize_documents(text : str):
         text=text,
         model='command',
         length='medium',
-        extractiveness='medium'
+        extractiveness='low',
+        temperature=5
     )
 
     summary = response.summary
