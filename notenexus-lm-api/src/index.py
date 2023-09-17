@@ -11,7 +11,8 @@ from db import (
     vector_distance_search,
     search_paragraph_contents,
     get_paragraph_neighbors,
-    get_paragraph_by_paraid
+    get_paragraph_by_paraid,
+    delete_note_paragraphs
 )
 
 
@@ -61,6 +62,11 @@ def edit_paragraphs():
 def get_paragraphs(note_id):
     paragraphs = get_paragraphs_by_noteids([note_id])
     return jsonify(paragraphs)
+
+@app.delete("/<note_id>")
+def delete_note(note_id):
+    delete_note_paragraphs(note_id=note_id)
+    return f'Deleted paragraphs for note {note_id}!'
 
 @app.post('/get_paragraphs')
 def get_paragraphs_with_list():
