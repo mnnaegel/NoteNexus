@@ -16,13 +16,6 @@
     $primary 100%
   );
 
-  // background: radial-gradient(
-  //   140% 107.13% at 50% 30%,
-  //   transparent 37.41%,
-  //   $primary 49.27%,
-  //   #fff 100%
-  // );
-
   &__top {
     display: flex;
     flex-direction: row;
@@ -30,13 +23,22 @@
     gap: 1em;
   }
   &__filter {
-    width: 300px;
-
-    &__input {
+    display: flex;
+    padding-left: 16px;
+    &__wrapper {
+      width: 300px;
+      margin: 0 auto;
+      position: relative;
       height: 2.5rem;
+      justify-content: center;
+      flex-direction: row;
+    }
+    &__input {
+      width: 100%;
+      height: 100%;
       padding: 1em;
       border-radius: 1em;
-      color: $black-olive;
+      color: black;
     }
 
     &__search {
@@ -60,9 +62,9 @@
       width: 300px;
       margin: 0 auto;
       position: relative;
+      height: 2.5rem;
       justify-content: center;
       flex-direction: row;
-      height: 2.5rem;
     }
     &__input {
       width: 100%;
@@ -73,7 +75,6 @@
 
       &__errors {
         position: absolute; // change later
-        right: 50%;
         top: 47px;
         color: red;
         font-size: 14px;

@@ -4,12 +4,13 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db.model import Paragraph
 from db import (
-    get_paragraphs_by_noteid,
+    get_paragraphs_by_noteids,
     delete_paragraphs_by_id,
     update_paragraphs,
     vector_similarity_search,
     vector_distance_search,
-    search_paragraph_contents
+    search_paragraph_contents,
+    get_paragraph_neighbors
 )
 
 
@@ -57,8 +58,44 @@ def edit_paragraphs():
 
 @app.get("/get_paragraphs/<note_id>")
 def get_paragraphs(note_id):
-    paragraphs = get_paragraphs_by_noteid(note_id)
+    paragraphs = get_paragraphs_by_noteids([note_id])
     return jsonify(paragraphs)
+
+@app.post('/get_paragraphs')
+def get_paragraphs_with_list():
+    body = request.json
+    
+    if 'note_ids' not in body:
+        return 'No note_ids parameter specified', 400
+    
+    rs = get_paragraphs_by_noteids(body['note_ids'])
+    
+    return jsonify(rs)
+
+@app.post('/get_knn_links')
+def get_knn_links():
+    body = request.json
+    
+    if 'para_id' not in body:
+        return 'no para_id specified', 400
+    
+    if 'note_ids' not in body:
+        return 'No note_ids parameter specified', 400
+    
+    
+    k = 3 if 'k' not in body else body['k']
+    
+    rs = get_paragraph_neighbors(body['para_id'], body['note_ids'], k)
+
+    
+    if rs:
+        return jsonify(rs)
+    else:
+        return jsonify([])
+
+
+
+
 
 # Used for writing new paragraphs, and update or deleting existing paragraphs
 @app.post('/get_linked_paragraphs')

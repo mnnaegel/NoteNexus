@@ -117,16 +117,20 @@ function NoteList() {
       <div className={styles.NoteList}>
         <div className={styles.NoteList__top}>
           <div className={styles.NoteList__filter}>
-            <input
-              className={styles.NoteList__filter__input}
-              type="filter"
-              placeholder="Filter"
-              value={filter}
-              onChange={(e) => {
-                return setFilter(e.target.value);
-              }}
-            />
-            <SearchIcon className={styles.NoteList__filter__search} />
+            <div className={styles.NoteList__filter__wrapper}>
+              <input
+                className={styles.NoteList__filter__input}
+                type="filter"
+                placeholder="Filter"
+                value={filter}
+                onChange={(e) => {
+                  return setFilter(e.target.value);
+                }}
+              />
+              <button className={styles.NoteList__filter__search}>
+                <SearchIcon />
+              </button>
+            </div>
           </div>
 
           <form
