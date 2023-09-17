@@ -6,7 +6,6 @@ import { v4 as uuid } from "uuid";
 import axios from "axios";
 
 import styles from "./NoteEditor.module.scss";
-import { eventNames } from "process";
 
 interface Paragraph {
     key: string;
@@ -26,6 +25,7 @@ interface UpdateParagraphRequest {
 function NoteEditor() {
   // NOTE: uuid() will be different for initial key and paragraph id
   const initial_id = uuid();
+  const [focusIdx, setFocusIdx] = useState(0);
   // Starting Editor
   const [editorContent, setEditorContent] = useState<Paragraph[]>([
     {
@@ -85,6 +85,7 @@ function NoteEditor() {
           let newParaId = uuid();
           let curr = editorContent.slice(i)[0];
           let next = curr.next;
+          setFocusIdx(i+1)
           curr.next = newParaId;
           curr.updated = true;
           new_arr.push(curr);
@@ -124,13 +125,13 @@ function NoteEditor() {
           {editorContent.map((el, index) => (
             <Grid item xs={12}>
               <TextareaAutosize
-                autoFocus
                 className={styles.paragraph}
-                // ref={(element: any) => element && (index == focusIdx) && element.focus()}
+                ref={(element: any) => element && (index == focusIdx) && element.focus()}
                 id={el.id}
                 key={el.key}
                 value={el.contents}
                 onChange={(e) => {
+                  setFocusIdx(index)
                   let editorCont = editorContent.map((editor, index) => {
                     if (editor.id !== el.id) {
                       return editor;
