@@ -10,7 +10,8 @@ from db import (
     vector_similarity_search,
     vector_distance_search,
     search_paragraph_contents,
-    get_paragraph_neighbors
+    get_paragraph_neighbors,
+    get_paragraph_by_paraid
 )
 
 
@@ -84,14 +85,23 @@ def get_knn_links():
     
     
     k = 3 if 'k' not in body else body['k']
-    
-    rs = get_paragraph_neighbors(body['para_id'], body['note_ids'], k)
+    paragraph = get_paragraph_by_paraid(body['para_id'])
+    rs = get_paragraph_neighbors(paragraph, body['note_ids'], k)
 
+    result = {
+        "links" : rs if rs else []
+    }
     
-    if rs:
-        return jsonify(rs)
-    else:
-        return jsonify([])
+    if 'include_summary' in body and body['include_summary']:
+        contents = paragraph['contents']
+        if len(contents) > 250:
+            summary = summarize_documents(contents)
+        else:
+            summary = contents
+        result['summary'] = summary
+    
+    
+    return jsonify(result)
 
 
 

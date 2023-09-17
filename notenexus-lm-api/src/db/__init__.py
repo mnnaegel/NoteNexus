@@ -61,8 +61,7 @@ def get_paragraphs_by_noteids(note_ids : list[str]):
     
     return rs
 
-def get_paragraph_neighbors(para_id : str, note_ids : list[str], k_neighbors : int = 5, exclude_own_note : bool = True):
-    paragraph = get_paragraph_by_paraid(para_id)
+def get_paragraph_neighbors(paragraph : dict, note_ids : list[str], k_neighbors : int = 5, exclude_own_note : bool = True):
     if not paragraph:
         return None
 
