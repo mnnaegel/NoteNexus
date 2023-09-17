@@ -10,7 +10,7 @@ import {
   Container,
   breadcrumbsClasses,
 } from "@mui/material";
-import NavigationBar from "@/components/Navigation/Navigation";
+import NavigationBar from "@/components/Header/Header";
 
 interface Paragraph {
   key: string;

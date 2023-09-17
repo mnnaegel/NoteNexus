@@ -1,7 +1,7 @@
 import styles from "./NoteList.module.scss";
 import Grid from "@mui/material/Grid"; // Grid version 1
 import NoteCard from "../../components/NoteCard/NoteCard";
-import NavigationBar from "@/components/Navigation/Navigation";
+import NavigationBar from "@/components/Header/Header";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";

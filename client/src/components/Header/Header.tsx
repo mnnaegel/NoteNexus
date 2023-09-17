@@ -1,11 +1,11 @@
 import Link from "next/link";
 import * as React from "react";
-import styles from "./Navigation.module.scss";
+import styles from "./Header.module.scss";
 
-interface INavigationBarProps {
+interface IHeaderProps {
   isNotLoggedIn?: boolean;
 }
-function Header({ isNotLoggedIn }: INavigationBarProps) {
+function Header({ isNotLoggedIn }: IHeaderProps) {
   const allowedPages = isNotLoggedIn
     ? [{ name: "Home", href: "/" }]
     : [

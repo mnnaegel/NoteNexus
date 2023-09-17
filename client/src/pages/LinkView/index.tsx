@@ -1,4 +1,4 @@
-import NavigationBar from "@/components/Navigation/Navigation";
+import NavigationBar from "@/components/Header/Header";
 import styles from "./LinkView.module.scss";
 
 const TestNotes = [
