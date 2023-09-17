@@ -110,6 +110,11 @@ function NoteList() {
   };
   useEffect(() => {
     getFilteredNotes("");
+    if (localStorage.getItem("noteId") !== null) {
+      let item = localStorage.getItem("noteId");
+      localStorage.clear();
+      push("/notes/"+item)
+    }
   }, []);
   return (
     <>

@@ -34,6 +34,14 @@ interface UpdateParagraphRequest {
   delete: string[];
 }
 
+import { create } from 'zustand'
+
+const useNoteStore = create((set) => ({
+  url: "",
+  updateNote: () => set((state: any) => ({ url: state })),
+  resetNote: () => set({ url: "" }),
+}))
+
 export default function Page() {
   const router = useRouter();
 
@@ -62,6 +70,7 @@ export default function Page() {
     },
   ]);
 
+  console.log(note_id)
   useEffect(() => {
     if (!!note_id && typeof note_id === "string") {
       // Gets note metadata and general info

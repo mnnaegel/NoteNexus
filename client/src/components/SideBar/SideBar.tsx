@@ -26,9 +26,6 @@ function SideBar({className, noteId, saveClick, linkView, editorView}: Props) {
             <IconButton className={styles.icon} onClick={editorView}>
                 <CreateIcon/>
             </IconButton>
-            <IconButton className={styles.icon}>
-                <SaveIcon/>
-            </IconButton>
 
         </div>
     )
